@@ -1,0 +1,8 @@
+services:
+  app:
+    build:
+      target: development
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    entrypoint: ['/bin/sh', '-c', '/usr/src/app/entrypoint.sh']
