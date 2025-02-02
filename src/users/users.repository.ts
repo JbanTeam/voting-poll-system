@@ -12,6 +12,9 @@ export class UsersRepository {
     private readonly repository: Repository<UsersEntity>,
   ) {}
 
+  async findAll() {
+    return this.repository.find();
+  }
   async createUser(registerDto: RegisterDto) {
     const user = this.repository.create(registerDto);
     return this.repository.save(user);

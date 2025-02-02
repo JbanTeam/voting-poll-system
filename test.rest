@@ -2,43 +2,30 @@
 ### USERS ************************************************
 
 ### Get all users
-GET http://localhost:5000/api/hello
+GET http://localhost:5000/api/users
 
-### Sign Up
-POST http://localhost:5000/api/signup HTTP/1.1
+### Register
+POST http://localhost:5000/api/auth/register HTTP/1.1
 content-type: application/json
 
 {
   "name": "Vital",
-  "email": "jt@mail.ru",
+  "email": "jtt@mail.ru",
   "password": "11111111",
   "confirmPassword": "11111111"
 }
 
-### Sign In
-POST http://localhost:5000/api/signin HTTP/1.1
+### Login
+POST http://localhost:5000/api/auth/login HTTP/1.1
 content-type: application/json
 
 {
-  "email": "jt@mail.ru",
-  "password": "11111111"
+  "email": "jtt@mail.ru",
+  "password": ""
 }
 
-### Get developer time
-GET http://localhost:5000/api/users/1/time?timeFilter=week&projectIds=1,2
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
-
-### PROJECTS ************************************************
-### PROJECTS ************************************************
-
-### Get all projects
-GET http://localhost:5000/api/projects HTTP/1.1
-
-### Get user projects and tasks
-GET http://localhost:5000/api/projects/own HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
+### POLLS ************************************************
+### POLLS ************************************************
 
 ### Init project
 POST http://localhost:5000/api/projects HTTP/1.1
@@ -50,67 +37,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtY
   "description": "super description"
 }
 
-### Add user to project
-PATCH http://localhost:5000/api/projects/1/add-user HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
-
-{
-  "addedUserId": 2
-}
-
-### Remove user from project
-PATCH http://localhost:5000/api/projects/1/remove-user HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
-
-{
-  "removedUserId": 2
-}
 
 ### Delete project
 DELETE http://localhost:5000/api/projects/1 HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
-
-### Get project time of all developers
-GET http://localhost:5000/api/projects/1/time?timeFilter=month HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
-
-### TASKS ************************************************
-### TASKS ************************************************
-
-### Add task to project
-POST http://localhost:5000/api/projects/1/tasks HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
-
-{
-  "title": "Super task2",
-  "description": "super description",
-  "deadline": "2025-02-22T11:56:53.206Z"
-}
-
-### Assign task to performer
-PATCH http://localhost:5000/api/projects/1/tasks/1/assign HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
-
-{
-  "performerId": 1
-}
-
-### Change status of task
-PATCH http://localhost:5000/api/projects/1/tasks/1/status HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
-
-{
-  "status": "IN_PROGRESS"
-}
-
-### Delete task
-DELETE http://localhost:5000/api/projects/1/tasks/1 HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E

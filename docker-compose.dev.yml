@@ -5,4 +5,4 @@ services:
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
-    entrypoint: ['/bin/sh', '-c', '/usr/src/app/entrypoint.sh']
+    command: npm run start:dev
