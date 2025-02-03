@@ -14,14 +14,14 @@ export class AuthService {
     private hashService: HashService,
   ) {}
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto): Promise<{ token: string }> {
     registerDto.password = await this.hashService.hash(registerDto.password);
     const user = await this.usersService.create(registerDto);
 
     return { token: this.jwtService.sign({ userId: user.id }) };
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto): Promise<{ token: string }> {
     const user = await this.usersService.findUserByEmail(loginDto.email);
     if (!user) {
       throw new BadRequestException('Invalid credentials');

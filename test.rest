@@ -21,20 +21,27 @@ content-type: application/json
 
 {
   "email": "jtt@mail.ru",
-  "password": ""
+  "password": "11111111"
 }
 
 ### POLLS ************************************************
 ### POLLS ************************************************
 
-### Init project
-POST http://localhost:5000/api/projects HTTP/1.1
+### Get all polls
+GET http://localhost:5000/api/polls
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODYwNzIyMywiZXhwIjoxNzM5MjEyMDIzfQ.PsHXkr9zFNIy5ZdL4q8tWeIrHM2TgIKlssmNksBtbAw
+
+### Create poll
+POST http://localhost:5000/api/polls HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODYwNzIyMywiZXhwIjoxNzM5MjEyMDIzfQ.PsHXkr9zFNIy5ZdL4q8tWeIrHM2TgIKlssmNksBtbAw
 
 {
-  "title": "Super projec2",
-  "description": "super description"
+  "title": "Super poll",
+  "description": "super description",
+  "questions": ["How old are you?", "How are you?"],
+  "answers": ["11-20, 21-30, 31-40", "fine, bad"]
 }
 
 

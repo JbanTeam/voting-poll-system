@@ -1,4 +1,6 @@
 FROM node:20.18.1-alpine as development
+ARG NODE_ENV=development
+ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 

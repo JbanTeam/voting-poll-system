@@ -1,0 +1,29 @@
+import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
+import { PollsDto } from 'src/modules/polls/dto/polls.dto';
+
+export function MatchLength(property: keyof PollsDto, validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      name: 'MatchLength',
+      target: object.constructor,
+      propertyName,
+      constraints: [property],
+      options: validationOptions,
+      validator: {
+        validate(value: unknown, args: ValidationArguments) {
+          if (!Array.isArray(value)) return false;
+
+          const relatedPropertyName = args.constraints[0] as keyof PollsDto;
+          const obj = args.object as PollsDto;
+
+          const relatedValue = obj[relatedPropertyName];
+          return Array.isArray(relatedValue) && value.length === relatedValue.length;
+        },
+        defaultMessage(args: ValidationArguments) {
+          const relatedPropertyName = args.constraints[0] as keyof PollsDto;
+          return `${args.property} must have the same length as ${relatedPropertyName}`;
+        },
+      },
+    });
+  };
+}

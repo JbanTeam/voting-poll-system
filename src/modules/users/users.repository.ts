@@ -12,23 +12,23 @@ export class UsersRepository {
     private readonly repository: Repository<UsersEntity>,
   ) {}
 
-  async findAll() {
+  async findAll(): Promise<UsersEntity[]> {
     return this.repository.find();
   }
-  async createUser(registerDto: RegisterDto) {
+  async createUser(registerDto: RegisterDto): Promise<UsersEntity> {
     const user = this.repository.create(registerDto);
     return this.repository.save(user);
   }
 
-  async findByCredentials(loginDto: LoginDto) {
+  async findByCredentials(loginDto: LoginDto): Promise<UsersEntity | null> {
     return this.repository.findOne({ where: { email: loginDto.email } });
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<UsersEntity | null> {
     return this.repository.findOne({ where: { email } });
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<UsersEntity | null> {
     return this.repository.findOne({ where: { id } });
   }
 }
