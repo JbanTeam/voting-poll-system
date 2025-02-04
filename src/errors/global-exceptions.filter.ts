@@ -1,5 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { httpStatusMap } from 'src/utils/constants';
 
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {
@@ -20,10 +21,10 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
     if (typeof errorResponse === 'object' && errorResponse !== null) {
       const { message, error } = errorResponse as { message: string | string[]; error: string };
       errorMessage = Array.isArray(message) ? message.join(', ') : message;
-      errorString = error || 'Internal server error';
+      errorString = error || String(httpStatusMap.get(status));
     } else {
       errorMessage = String(errorResponse);
-      errorString = 'Internal server error';
+      errorString = String(httpStatusMap.get(status));
     }
 
     this.logger.error(`HTTP ${status} Error: ${request.method} ${request.url} - ${String(exception)}`);

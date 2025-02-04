@@ -1,15 +1,20 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { PollsService } from './polls.service';
 import { PollsEntity } from './polls.entity';
 import { PollsDto } from './dto/polls.dto';
+import { CurrentUser } from 'src/utils/current-user.decorator';
+import { DecodedUser, PollsByPage } from 'src/types/types';
 
 @Controller('polls')
 export class PollsController {
   constructor(private pollsService: PollsService) {}
 
   @Get()
-  async getPolls(): Promise<PollsEntity[]> {
-    return await this.pollsService.findAll();
+  async getPolls(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ): Promise<PollsByPage> {
+    return await this.pollsService.findAll(page, limit);
   }
 
   @Get(':id')
@@ -18,7 +23,13 @@ export class PollsController {
   }
 
   @Post()
-  async createPoll(@Body() pollsDto: PollsDto): Promise<any> {
-    return this.pollsService.create(pollsDto);
+  async createPoll(@Body() pollsDto: PollsDto, @CurrentUser() user: DecodedUser): Promise<PollsEntity> {
+    console.log(user);
+    return this.pollsService.create(pollsDto, user);
+  }
+
+  @Delete()
+  async deletePolls() {
+    return this.pollsService.deleteAll();
   }
 }

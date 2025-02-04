@@ -9,6 +9,7 @@ import { UsersModule } from '../users/users.module';
 import { HashService } from './hash/hash.service';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -24,7 +25,16 @@ import { JwtAuthGuard } from './jwt-auth.guard';
     UsersModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, HashService, JwtStrategy, JwtAuthGuard],
+  providers: [
+    AuthService,
+    HashService,
+    JwtStrategy,
+    JwtAuthGuard,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
   exports: [AuthService, JwtAuthGuard],
 })
 export class AuthModule {}

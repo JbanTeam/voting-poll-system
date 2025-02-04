@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  JoinColumn,
+} from 'typeorm';
 import { UsersEntity } from '../users/users.entity';
 
 export enum PollStatus {
@@ -18,6 +26,7 @@ export class PollsEntity {
   description: string;
 
   @ManyToOne(() => UsersEntity, user => user.polls, { onDelete: 'CASCADE' })
+  @JoinColumn()
   author: UsersEntity;
 
   @CreateDateColumn()

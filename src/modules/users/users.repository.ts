@@ -13,7 +13,11 @@ export class UsersRepository {
   ) {}
 
   async findAll(): Promise<UsersEntity[]> {
-    return this.repository.find();
+    return this.repository.find({
+      relations: {
+        polls: true,
+      },
+    });
   }
   async createUser(registerDto: RegisterDto): Promise<UsersEntity> {
     const user = this.repository.create(registerDto);

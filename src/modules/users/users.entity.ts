@@ -21,6 +21,6 @@ export class UsersEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => PollsEntity, poll => poll.author)
+  @OneToMany(() => PollsEntity, poll => poll.author, { cascade: true })
   polls: PollsEntity[];
 }

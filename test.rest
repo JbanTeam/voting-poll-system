@@ -28,14 +28,19 @@ content-type: application/json
 ### POLLS ************************************************
 
 ### Get all polls
-GET http://localhost:5000/api/polls
+GET http://localhost:5000/api/polls?page=1&limit=20
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODYwNzIyMywiZXhwIjoxNzM5MjEyMDIzfQ.PsHXkr9zFNIy5ZdL4q8tWeIrHM2TgIKlssmNksBtbAw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+
+### Delete all polls
+DELETE http://localhost:5000/api/polls
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
 
 ### Create poll
 POST http://localhost:5000/api/polls HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODYwNzIyMywiZXhwIjoxNzM5MjEyMDIzfQ.PsHXkr9zFNIy5ZdL4q8tWeIrHM2TgIKlssmNksBtbAw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
 
 {
   "title": "Super poll",
@@ -44,8 +49,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
   "answers": ["11-20, 21-30, 31-40", "fine, bad"]
 }
 
-
-### Delete project
-DELETE http://localhost:5000/api/projects/1 HTTP/1.1
+### Participate in poll
+POST http://localhost:5000/api/polls/1/participate HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoianRAbWFpbC5ydSIsImlhdCI6MTczODIzNzMyNiwiZXhwIjoxNzM4ODQyMTI2fQ.X9nGBx3ClHF1vyArI45nFU4S4R90NEmbWGD1c_F3U5E
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+
+{
+  "results": {
+    "1": []
+  }
+}
