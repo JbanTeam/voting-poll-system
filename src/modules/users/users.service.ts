@@ -18,7 +18,7 @@ export class UsersService {
       },
     });
   }
-  async createUser(registerDto: RegisterDto): Promise<UsersEntity> {
+  async create(registerDto: RegisterDto): Promise<UsersEntity> {
     const user = this.usersRepository.create(registerDto);
     return this.usersRepository.save(user);
   }

@@ -4,7 +4,7 @@ import { QuestionsEntity } from '../questions/questions.entity';
 import { AnswersEntity } from '../answers/answers.entity';
 
 @Entity('user_answers')
-export class UserAnswer {
+export class UserAnswersEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

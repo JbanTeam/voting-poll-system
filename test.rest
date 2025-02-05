@@ -10,7 +10,7 @@ content-type: application/json
 
 {
   "name": "Vital",
-  "email": "jttt@mail.ru",
+  "email": "jt@mail.ru",
   "password": "11111111",
   "confirmPassword": "11111111"
 }
@@ -20,7 +20,7 @@ POST http://localhost:5000/api/auth/login HTTP/1.1
 content-type: application/json
 
 {
-  "email": "jtt@mail.ru",
+  "email": "jt@mail.ru",
   "password": "11111111"
 }
 
@@ -30,31 +30,31 @@ content-type: application/json
 ### Get all polls
 GET http://localhost:5000/api/polls?page=1&limit=20
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
 
 ### Get all questions
 GET http://localhost:5000/api/polls/questions
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
 
 ### Get all answers
 GET http://localhost:5000/api/polls/answers
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
 
 ### Delete all polls
 DELETE http://localhost:5000/api/polls
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
 
 ### Create poll
 POST http://localhost:5000/api/polls HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
 
 {
-  "title": "Super poll2",
-  "description": "super description2",
+  "title": "Super poll",
+  "description": "super description",
   "questions": [
     {
       "text": "How old are you?",
@@ -75,13 +75,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
   ]
 }
 
-### Participate in poll
-POST http://localhost:5000/api/polls/1/participate HTTP/1.1
+### Save user answers
+POST http://localhost:5000/api/polls/1/save-answers HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
 
 {
-  "results": {
-    "1": []
-  }
+  "userAnswers": [
+    {"questionId": 1, "answerId": 3},
+    {"questionId": 2, "answerId": 4}
+  ]
 }
