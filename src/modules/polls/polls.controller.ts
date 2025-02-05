@@ -17,14 +17,23 @@ export class PollsController {
     return await this.pollsService.findAll(page, limit);
   }
 
+  @Get('/questions')
+  async getAllQuestions() {
+    return this.pollsService.getAllQuestions();
+  }
+
+  @Get('/answers')
+  async getAllAnswers() {
+    return this.pollsService.getAllAnswers();
+  }
+
   @Get(':id')
-  async getUser(@Param('id', ParseIntPipe) id: number): Promise<PollsEntity | null> {
+  async getPoll(@Param('id', ParseIntPipe) id: number): Promise<PollsEntity | null> {
     return await this.pollsService.findPollById(id);
   }
 
   @Post()
   async createPoll(@Body() pollsDto: PollsDto, @CurrentUser() user: DecodedUser): Promise<PollsEntity> {
-    console.log(user);
     return this.pollsService.create(pollsDto, user);
   }
 

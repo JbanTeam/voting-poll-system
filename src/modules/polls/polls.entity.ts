@@ -6,8 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { UsersEntity } from '../users/users.entity';
+import { QuestionsEntity } from '../questions/questions.entity';
 
 export enum PollStatus {
   ACTIVE = 'ACTIVE',
@@ -25,10 +27,6 @@ export class PollsEntity {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @ManyToOne(() => UsersEntity, user => user.polls, { onDelete: 'CASCADE' })
-  @JoinColumn()
-  author: UsersEntity;
-
   @CreateDateColumn()
   createdAt: Date;
 
@@ -40,4 +38,11 @@ export class PollsEntity {
 
   @Column({ type: 'enum', enum: PollStatus, default: PollStatus.ACTIVE })
   status: PollStatus;
+
+  @ManyToOne(() => UsersEntity, user => user.polls, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  author: UsersEntity;
+
+  @OneToMany(() => QuestionsEntity, question => question.poll, { cascade: true })
+  questions: QuestionsEntity[];
 }

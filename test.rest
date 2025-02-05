@@ -10,7 +10,7 @@ content-type: application/json
 
 {
   "name": "Vital",
-  "email": "jtt@mail.ru",
+  "email": "jttt@mail.ru",
   "password": "11111111",
   "confirmPassword": "11111111"
 }
@@ -32,6 +32,16 @@ GET http://localhost:5000/api/polls?page=1&limit=20
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
 
+### Get all questions
+GET http://localhost:5000/api/polls/questions
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+
+### Get all answers
+GET http://localhost:5000/api/polls/answers
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
+
 ### Delete all polls
 DELETE http://localhost:5000/api/polls
 content-type: application/json
@@ -43,10 +53,26 @@ content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODY4MTY5NiwiZXhwIjoxNzM5Mjg2NDk2fQ.sLNPRRgIRgIfPELEsMhyaxZnGjQ8Qn_-0H0bKR2O3UY
 
 {
-  "title": "Super poll",
-  "description": "super description",
-  "questions": ["How old are you?", "How are you?"],
-  "answers": ["11-20, 21-30, 31-40", "fine, bad"]
+  "title": "Super poll2",
+  "description": "super description2",
+  "questions": [
+    {
+      "text": "How old are you?",
+      "answers": [
+        {"text": "11-20"},
+        {"text": "21-30"},
+        {"text": "31-40"}
+      ]
+    },
+    {
+      "text": "How are you?",
+      "answers": [
+        {"text": "fine"},
+        {"text": "very well"},
+        {"text": "bad"}
+      ]
+    }
+  ]
 }
 
 ### Participate in poll

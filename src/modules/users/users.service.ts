@@ -1,23 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { UsersRepository } from './users.repository';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { UsersEntity } from './users.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(
+    @InjectRepository(UsersEntity)
+    private readonly usersRepository: Repository<UsersEntity>,
+  ) {}
 
   async findAll(): Promise<UsersEntity[]> {
-    return this.usersRepository.findAll();
+    return this.usersRepository.find({
+      relations: {
+        polls: true,
+      },
+    });
   }
-  async create(registerDto: RegisterDto): Promise<UsersEntity> {
-    return this.usersRepository.createUser(registerDto);
+  async createUser(registerDto: RegisterDto): Promise<UsersEntity> {
+    const user = this.usersRepository.create(registerDto);
+    return this.usersRepository.save(user);
   }
 
-  async findUserByEmail(email: string): Promise<UsersEntity | null> {
-    return this.usersRepository.findByEmail(email);
+  async findByEmail(email: string): Promise<UsersEntity | null> {
+    return this.usersRepository.findOne({ where: { email } });
   }
-  async findUserById(id: number): Promise<UsersEntity | null> {
-    return this.usersRepository.findById(id);
+
+  async findById(id: number): Promise<UsersEntity | null> {
+    return this.usersRepository.findOne({ where: { id } });
   }
 }

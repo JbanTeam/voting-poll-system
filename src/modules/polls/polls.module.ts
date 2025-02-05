@@ -3,12 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PollsService } from './polls.service';
 import { PollsController } from './polls.controller';
 import { PollsEntity } from './polls.entity';
-import { PollsRepository } from './polls.repository';
+import { QuestionsEntity } from '../questions/questions.entity';
+import { AnswersEntity } from '../answers/answers.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PollsEntity])],
+  imports: [TypeOrmModule.forFeature([PollsEntity, QuestionsEntity, AnswersEntity])],
   controllers: [PollsController],
-  providers: [PollsService, PollsRepository],
-  exports: [PollsService, PollsRepository],
+  providers: [PollsService],
+  exports: [PollsService],
 })
 export class PollsModule {}
