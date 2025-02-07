@@ -30,27 +30,27 @@ content-type: application/json
 ### Get all polls
 GET http://localhost:5000/api/polls?page=1&limit=20
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
 ### Get all questions
 GET http://localhost:5000/api/polls/questions
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
 ### Get all answers
 GET http://localhost:5000/api/polls/answers
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
-### Delete all polls
-DELETE http://localhost:5000/api/polls
+### Get poll statistics
+GET http://localhost:5000/api/polls/1/statistics
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
 ### Create poll
 POST http://localhost:5000/api/polls HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
 {
   "title": "Super poll",
@@ -78,11 +78,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 ### Save user answers
 POST http://localhost:5000/api/polls/1/save-answers HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODc3NTMwMiwiZXhwIjoxNzM5MzgwMTAyfQ.YsPBcIF0d6Tt1iKdf3MHYzXR4yELGwhdrexXIH3WIeQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
 {
   "userAnswers": [
     {"questionId": 1, "answerId": 3},
-    {"questionId": 2, "answerId": 4}
+    {"questionId": 2, "answerId": 6}
   ]
 }
+
+### Delete all polls
+DELETE http://localhost:5000/api/polls
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA

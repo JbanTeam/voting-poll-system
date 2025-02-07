@@ -11,4 +11,23 @@ type PollsByPage = {
   pageCount: number;
 };
 
-export { DecodedUser, PollsByPage };
+type Answer = {
+  id: number;
+  text: string;
+};
+
+type Stat = {
+  count: number;
+  answer: Answer;
+};
+
+type QuestionStats = {
+  title: string;
+  stats: Stat[];
+};
+
+type PollStatistics = {
+  [questionId: number]: QuestionStats;
+};
+
+export { DecodedUser, PollsByPage, PollStatistics };
