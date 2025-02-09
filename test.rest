@@ -32,6 +32,11 @@ GET http://localhost:5000/api/polls?page=1&limit=20
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
+### Get own polls
+GET http://localhost:5000/api/polls/own?page=1&limit=20
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
+
 ### Get all questions
 GET http://localhost:5000/api/polls/questions
 content-type: application/json
@@ -75,6 +80,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
   ]
 }
 
+### Close poll
+PATCH http://localhost:5000/api/polls/5/close HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
+
 ### Save user answers
 POST http://localhost:5000/api/polls/1/save-answers HTTP/1.1
 content-type: application/json
@@ -82,8 +92,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 
 {
   "userAnswers": [
-    {"questionId": 1, "answerId": 3},
-    {"questionId": 2, "answerId": 6}
+    {"questionId": 1, "answerId": 2},
+    {"questionId": 2, "answerId": 4}
   ]
 }
 

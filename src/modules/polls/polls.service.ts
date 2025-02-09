@@ -27,7 +27,7 @@ export class PollsService {
 
   async findAll({ page, limit }: { page: number; limit: number }): Promise<PollsByPage> {
     const [polls, count] = await this.pollsRepository.findAndCount({
-      select: ['title', 'description', 'createdAt'],
+      select: ['id', 'title', 'description', 'createdAt'],
       where: { status: PollStatus.ACTIVE },
       take: limit,
       skip: (page - 1) * limit,
@@ -41,8 +41,24 @@ export class PollsService {
     };
   }
 
+  async findOwnPolls({ page, limit, user }: { page: number; limit: number; user: DecodedUser }): Promise<PollsByPage> {
+    const [polls, count] = await this.pollsRepository.findAndCount({
+      select: ['id', 'title', 'description', 'status', 'createdAt', 'updatedAt', 'closedAt'],
+      where: { author: { id: user.userId } },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    return {
+      data: polls,
+      total: count,
+      page,
+      pageCount: Math.ceil(count / limit),
+    };
+  }
+
   async findPollById(id: number): Promise<PollsEntity | null> {
-    return this.pollsRepository.findOne({ where: { id } });
+    return this.pollsRepository.findOne({ where: { id }, relations: ['author'], select: { author: { id: true } } });
   }
 
   async getAllQuestions(): Promise<QuestionsEntity[]> {
@@ -73,13 +89,11 @@ export class PollsService {
 
       const allAnswers = fullPoll.questions.flatMap(question => question.answers);
 
-      await this.createPollStatistics(
-        {
-          answers: allAnswers,
-          pollId: savedPoll.id,
-        },
+      await this.createPollStatistics({
+        answers: allAnswers,
+        pollId: savedPoll.id,
         entityManager,
-      );
+      });
 
       return fullPoll;
     });
@@ -109,10 +123,10 @@ export class PollsService {
     }
 
     if (newStatus === poll.status) {
-      throw new BadRequestException('Task is already in this status');
+      throw new BadRequestException('Poll is already in this status');
     }
 
-    await this.pollsRepository.update({ id: pollId }, { status: newStatus });
+    await this.pollsRepository.update({ id: pollId }, { status: newStatus, closedAt: new Date() });
 
     return { message: 'Poll closed successfully' };
   }
@@ -128,6 +142,7 @@ export class PollsService {
   }): Promise<PollStatistics> {
     const { userId } = decodedUser;
     const { userAnswers } = userAnswersDto;
+
     return this.pollsRepository.manager.transaction(async entityManager => {
       const user = await entityManager.findOne(UsersEntity, {
         where: { id: userId },
@@ -172,10 +187,15 @@ export class PollsService {
     });
   }
 
-  private async createPollStatistics(
-    { answers, pollId }: { answers: AnswersEntity[]; pollId: number },
-    entityManager?: EntityManager,
-  ) {
+  private async createPollStatistics({
+    answers,
+    pollId,
+    entityManager,
+  }: {
+    answers: AnswersEntity[];
+    pollId: number;
+    entityManager?: EntityManager;
+  }) {
     const manager = entityManager || this.pollStatisticsRepository.manager;
 
     await manager
