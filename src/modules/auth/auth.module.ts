@@ -5,7 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersModule } from '../users/users.module';
+import { UserModule } from '../user/user.module';
 import { HashService } from './hash/hash.service';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -22,7 +22,7 @@ import { APP_GUARD } from '@nestjs/core';
         signOptions: { expiresIn: '7d' },
       }),
     }),
-    UsersModule,
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [

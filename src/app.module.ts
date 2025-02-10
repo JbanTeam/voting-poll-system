@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
+import { UserModule } from './modules/user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { databaseConfig } from './config/database.config';
-import { PollsModule } from './modules/polls/polls.module';
+import { PollModule } from './modules/poll/poll.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     TypeOrmModule.forRoot(databaseConfig()),
     AuthModule,
-    UsersModule,
-    PollsModule,
+    UserModule,
+    PollModule,
   ],
 })
 export class AppModule {}

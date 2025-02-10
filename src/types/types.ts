@@ -1,11 +1,11 @@
-import { PollsEntity } from 'src/modules/polls/polls.entity';
+import { PollEntity } from 'src/modules/poll/poll.entity';
 
 type DecodedUser = {
   userId: number;
 };
 
 type PollsByPage = {
-  data: PollsEntity[];
+  data: PollEntity[];
   total: number;
   page: number;
   pageCount: number;

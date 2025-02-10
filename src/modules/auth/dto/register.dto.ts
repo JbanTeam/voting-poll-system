@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, NotEquals } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEqual } from 'src/utils/validators/match-fields.validator';
 
 export class RegisterDto {
   @IsString()
@@ -16,6 +17,6 @@ export class RegisterDto {
 
   @IsString()
   @IsNotEmpty({ message: 'Confirm password is required' })
-  @NotEquals('password', { message: 'Passwords do not match' })
+  @IsEqual('password', { message: 'Passwords do not match' })
   confirmPassword: string;
 }

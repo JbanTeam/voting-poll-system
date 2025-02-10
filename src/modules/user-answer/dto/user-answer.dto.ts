@@ -1,14 +1,14 @@
 import { Type } from 'class-transformer';
 import { IsNotEmpty, ArrayNotEmpty, ValidateNested, IsNumber } from 'class-validator';
 
-export class UserAnswersDto {
+export class UserAnswerDto {
   @ArrayNotEmpty({ message: 'User answers must be array and not be empty' })
   @ValidateNested({ each: true })
-  @Type(() => UserAnswerDto)
-  userAnswers: UserAnswerDto[];
+  @Type(() => UserAnswer)
+  userAnswers: UserAnswer[];
 }
 
-class UserAnswerDto {
+export class UserAnswer {
   @IsNumber()
   @IsNotEmpty({ message: 'Question id is required' })
   questionId: number;

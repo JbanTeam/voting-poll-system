@@ -1,24 +1,24 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { AnswersEntity } from '../answers/answers.entity';
-import { PollsEntity } from '../polls/polls.entity';
-import { QuestionsEntity } from '../questions/questions.entity';
+import { AnswerEntity } from '../answer/answer.entity';
+import { PollEntity } from '../poll/poll.entity';
+import { QuestionEntity } from '../question/question.entity';
 
 @Entity('poll_statistics')
 export class PollStatisticsEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => PollsEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => PollEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'poll_id' })
-  poll: PollsEntity;
+  poll: PollEntity;
 
-  @ManyToOne(() => AnswersEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => AnswerEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'answer_id' })
-  answer: AnswersEntity;
+  answer: AnswerEntity;
 
-  @ManyToOne(() => QuestionsEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => QuestionEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'question_id' })
-  question: QuestionsEntity;
+  question: QuestionEntity;
 
   @Column({ type: 'int', default: 0 })
   count: number;

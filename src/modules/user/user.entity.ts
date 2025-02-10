@@ -1,8 +1,8 @@
-import { PollsEntity } from 'src/modules/polls/polls.entity';
+import { PollEntity } from 'src/modules/poll/poll.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('users')
-export class UsersEntity {
+@Entity('user')
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,6 +21,6 @@ export class UsersEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => PollsEntity, poll => poll.author, { cascade: true })
-  polls: PollsEntity[];
+  @OneToMany(() => PollEntity, poll => poll.author, { cascade: true })
+  polls: PollEntity[];
 }

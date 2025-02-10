@@ -10,7 +10,7 @@ content-type: application/json
 
 {
   "name": "Vital",
-  "email": "jt@mail.ru",
+  "email": "jttt@mail.ru",
   "password": "11111111",
   "confirmPassword": "11111111"
 }
@@ -37,18 +37,8 @@ GET http://localhost:5000/api/polls/own?page=1&limit=20
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
-### Get all questions
-GET http://localhost:5000/api/polls/questions
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
-
-### Get all answers
-GET http://localhost:5000/api/polls/answers
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
-
 ### Get poll statistics
-GET http://localhost:5000/api/polls/1/statistics
+GET http://localhost:5000/api/polls/2/statistics
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
@@ -58,7 +48,7 @@ content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
 {
-  "title": "Super poll",
+  "title": "Super poll2",
   "description": "super description",
   "questions": [
     {
@@ -81,12 +71,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 }
 
 ### Close poll
-PATCH http://localhost:5000/api/polls/5/close HTTP/1.1
+PATCH http://localhost:5000/api/polls/2/close HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 
 ### Save user answers
-POST http://localhost:5000/api/polls/1/save-answers HTTP/1.1
+POST http://localhost:5000/api/polls/2/save-answers HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
 

@@ -8,16 +8,16 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { UsersEntity } from '../users/users.entity';
-import { QuestionsEntity } from '../questions/questions.entity';
+import { UserEntity } from '../user/user.entity';
+import { QuestionEntity } from '../question/question.entity';
 
 export enum PollStatus {
   ACTIVE = 'ACTIVE',
   CLOSED = 'CLOSED',
 }
 
-@Entity('polls')
-export class PollsEntity {
+@Entity('poll')
+export class PollEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -39,10 +39,10 @@ export class PollsEntity {
   @Column({ type: 'enum', enum: PollStatus, default: PollStatus.ACTIVE })
   status: PollStatus;
 
-  @ManyToOne(() => UsersEntity, user => user.polls, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, user => user.polls, { onDelete: 'CASCADE' })
   @JoinColumn()
-  author: UsersEntity;
+  author: UserEntity;
 
-  @OneToMany(() => QuestionsEntity, question => question.poll, { cascade: true })
-  questions: QuestionsEntity[];
+  @OneToMany(() => QuestionEntity, question => question.poll, { cascade: true })
+  questions: QuestionEntity[];
 }
