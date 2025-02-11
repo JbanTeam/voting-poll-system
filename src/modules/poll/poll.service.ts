@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { PollDto } from './dto/poll.dto';
 import { PollEntity, PollStatus } from './poll.entity';
@@ -6,15 +6,15 @@ import { DecodedUser, PollsByPage, PollStatistics } from 'src/types/types';
 import { QuestionEntity } from '../question/question.entity';
 import { AnswerEntity } from '../answer/answer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { UserAnswerEntity } from '../user-answer/user-answer.entity';
 import { UserAnswerDto } from '../user-answer/dto/user-answer.dto';
 import { PollUpdateDto } from './dto/poll-update.dto';
 import { PollStatisticService } from '../poll-statistics/poll-statistic.service';
 import {
-  validateAnsweredQuestions,
+  validateAnyoneAnswered,
   validateNewStatus,
-  validatePollAuthor,
+  validatePollAnswered,
   validatePollExists,
   validatePollStatus,
   validateUserExists,
@@ -29,10 +29,12 @@ export class PollService {
     private readonly questionsRepository: Repository<QuestionEntity>,
     @InjectRepository(AnswerEntity)
     private readonly answersRepository: Repository<AnswerEntity>,
+    @InjectRepository(UserAnswerEntity)
+    private readonly userAnswersRepository: Repository<UserAnswerEntity>,
     private readonly pollStatisticService: PollStatisticService,
   ) {}
 
-  async findAll({ page, limit }: { page: number; limit: number }): Promise<PollsByPage> {
+  async findAllPolls({ page, limit }: { page: number; limit: number }): Promise<PollsByPage> {
     const [polls, count] = await this.pollsRepository.findAndCount({
       select: ['id', 'title', 'description', 'createdAt'],
       where: { status: PollStatus.ACTIVE },
@@ -72,6 +74,10 @@ export class PollService {
     return this.answersRepository.find({ relations: ['question'] });
   }
 
+  async getAllUserAnswers(): Promise<UserAnswerEntity[]> {
+    return this.userAnswersRepository.find({ relations: ['poll'] });
+  }
+
   async create({ pollsDto, user }: { pollsDto: PollDto; user: DecodedUser }): Promise<PollEntity> {
     return this.pollsRepository.manager.transaction(async entityManager => {
       const poll = entityManager.create(PollEntity, {
@@ -81,14 +87,11 @@ export class PollService {
 
       const savedPoll = await entityManager.save(PollEntity, poll);
 
-      const fullPoll = await entityManager.findOne(PollEntity, {
-        where: { id: savedPoll.id },
+      const fullPoll = await validatePollExists({
+        pollId: savedPoll.id,
         relations: ['questions', 'questions.answers', 'questions.answers.question'],
+        entityManager,
       });
-
-      if (!fullPoll) {
-        throw new NotFoundException('Poll not found');
-      }
 
       const allAnswers = fullPoll.questions.flatMap(question => question.answers);
 
@@ -110,17 +113,20 @@ export class PollService {
     user: DecodedUser;
     pollId: number;
     newStatus: PollStatus;
-  }): Promise<{ message: string }> {
+  }): Promise<PollEntity | null> {
     validateNewStatus(newStatus);
 
-    const poll = await validatePollExists(pollId, this.pollsRepository.manager);
-    validatePollAuthor(poll, user);
+    const entityManager = this.pollsRepository.manager;
+    const poll = await validatePollExists({ pollId, authorId: user.userId, entityManager });
 
-    validatePollStatus(poll.status, newStatus);
+    validatePollStatus({ pollStatus: poll.status, newStatus });
 
     await this.pollsRepository.update({ id: pollId }, { status: newStatus, closedAt: new Date() });
 
-    return { message: 'Poll closed successfully' };
+    return entityManager.findOne(PollEntity, {
+      where: { id: pollId },
+      relations: ['questions', 'questions.answers'],
+    });
   }
 
   async updatePoll({
@@ -131,14 +137,31 @@ export class PollService {
     user: DecodedUser;
     pollId: number;
     pollUpdateDto: PollUpdateDto;
-  }): Promise<{ message: string }> {
-    console.log(pollUpdateDto);
-    const poll = await validatePollExists(pollId, this.pollsRepository.manager);
-    validatePollAuthor(poll, user);
+  }): Promise<PollEntity | null> {
+    return this.pollsRepository.manager.transaction(async entityManager => {
+      await validateUserExists({ userId: user.userId, entityManager });
 
-    await this.pollsRepository.update({ id: pollId }, {});
+      const poll = await validatePollExists({
+        pollId,
+        authorId: user.userId,
+        relations: ['author', 'questions', 'questions.answers'],
+        entityManager,
+      });
 
-    return { message: 'Poll updated successfully' };
+      await validateAnyoneAnswered({ pollId, entityManager });
+
+      poll.title = pollUpdateDto.title || poll.title;
+      poll.description = pollUpdateDto.description || poll.description;
+
+      await updateQuestionsAndAnswers({ poll, pollUpdateDto, entityManager });
+
+      const updatedPoll = await entityManager.save(PollEntity, poll);
+
+      return entityManager.findOne(PollEntity, {
+        where: { id: updatedPoll.id },
+        relations: ['questions', 'questions.answers'],
+      });
+    });
   }
 
   async saveAnswers({
@@ -154,17 +177,18 @@ export class PollService {
     const { userAnswers } = userAnswersDto;
 
     return this.pollsRepository.manager.transaction(async entityManager => {
-      await validateUserExists(userId, entityManager);
+      await validateUserExists({ userId, entityManager });
 
-      await validatePollExists(pollId, entityManager);
+      await validatePollExists({ pollId, where: { status: PollStatus.ACTIVE }, entityManager });
 
-      await validateAnsweredQuestions(userId, userAnswers, entityManager);
+      await validatePollAnswered({ pollId, userId, entityManager });
 
       const answers = userAnswers.map(answer => {
         return entityManager.create(UserAnswerEntity, {
           user: { id: userId },
           question: { id: answer.questionId },
           answer: { id: answer.answerId },
+          poll: { id: pollId },
         });
       });
 
@@ -180,3 +204,42 @@ export class PollService {
     return this.pollsRepository.delete({});
   }
 }
+
+const updateQuestionsAndAnswers = async ({
+  poll,
+  pollUpdateDto,
+  entityManager,
+}: {
+  poll: PollEntity;
+  pollUpdateDto: PollUpdateDto;
+  entityManager: EntityManager;
+}) => {
+  if (pollUpdateDto.questions?.length) {
+    const newQuestionIds = pollUpdateDto.questions.map(q => q.id).filter(id => id !== undefined);
+
+    const questionsToDelete = poll.questions.filter(q => !newQuestionIds.includes(q.id));
+    await entityManager.remove(QuestionEntity, questionsToDelete);
+
+    poll.questions = await Promise.all(
+      pollUpdateDto.questions.map(async questionDto => {
+        const question = poll.questions.find(q => q.id === questionDto.id) || new QuestionEntity();
+        if (questionDto.text) question.text = questionDto.text;
+
+        if (questionDto.answers?.length) {
+          const newAnswerIds = questionDto.answers.map(a => a.id).filter(id => id !== undefined);
+
+          const answersToDelete = question.answers.filter(a => !newAnswerIds.includes(a.id));
+          await entityManager.remove(AnswerEntity, answersToDelete);
+
+          question.answers = questionDto.answers.map(answerDto => {
+            const answer = question.answers.find(a => a.id === answerDto.id) || new AnswerEntity();
+            answer.text = answerDto.text;
+            return answer;
+          });
+        }
+
+        return question;
+      }),
+    );
+  }
+};

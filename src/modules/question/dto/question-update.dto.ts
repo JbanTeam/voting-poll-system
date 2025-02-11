@@ -1,13 +1,19 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsString, ValidateNested } from 'class-validator';
-import { AnswerDto } from 'src/modules/answer/dto/answer.dto';
+import { IsArray, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { AnswerUpdateDto } from 'src/modules/answer/dto/answer-update.dto';
 
-export class QuestionDto {
+export class QuestionUpdateDto {
+  @IsNumber({}, { message: 'Question id must be a number' })
+  @IsOptional()
+  id?: number;
+
   @IsString({ message: 'Question must be a string' })
-  text: string;
+  @IsOptional()
+  text?: string;
 
   @IsArray({ message: 'Answers must be an array' })
   @ValidateNested({ each: true })
-  @Type(() => AnswerDto)
-  answers: AnswerDto[];
+  @Type(() => AnswerUpdateDto)
+  @IsOptional()
+  answers?: AnswerUpdateDto[];
 }

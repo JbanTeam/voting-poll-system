@@ -1,16 +1,19 @@
 import { Type } from 'class-transformer';
-import { IsString, ValidateNested, IsArray } from 'class-validator';
-import { QuestionDto } from 'src/modules/question/dto/question.dto';
+import { IsString, ValidateNested, IsArray, IsOptional } from 'class-validator';
+import { QuestionUpdateDto } from 'src/modules/question/dto/question-update.dto';
 
 export class PollUpdateDto {
   @IsString({ message: 'Name must be a string' })
-  title: string;
+  @IsOptional()
+  title?: string;
 
   @IsString({ message: 'Description must be a string' })
-  description: string;
+  @IsOptional()
+  description?: string;
 
   @IsArray({ message: 'Questions must be an array' })
   @ValidateNested({ each: true })
-  @Type(() => QuestionDto)
-  questions: QuestionDto[];
+  @Type(() => QuestionUpdateDto)
+  @IsOptional()
+  questions?: QuestionUpdateDto[];
 }

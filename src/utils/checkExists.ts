@@ -1,17 +1,15 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { PollEntity, PollStatus } from 'src/modules/poll/poll.entity';
-import { UserAnswer } from 'src/modules/user-answer/dto/user-answer.dto';
 import { UserAnswerEntity } from 'src/modules/user-answer/user-answer.entity';
 import { UserEntity } from 'src/modules/user/user.entity';
-import { DecodedUser } from 'src/types/types';
-import { EntityManager, In } from 'typeorm';
+import { EntityManager, FindOptionsRelations, FindOptionsSelect, FindOptionsWhere } from 'typeorm';
 
-const validateUserExists = async (userId: number, manager: EntityManager) => {
-  const user = await manager.findOne(UserEntity, {
+const validateUserExists = async ({ userId, entityManager }: { userId: number; entityManager: EntityManager }) => {
+  const user = await entityManager.findOne(UserEntity, {
     where: { id: userId },
   });
   if (!user) {
-    throw new NotFoundException('User not found');
+    throw new NotFoundException('User not found.');
   }
 
   return user;
@@ -19,49 +17,81 @@ const validateUserExists = async (userId: number, manager: EntityManager) => {
 
 const validateNewStatus = (newStatus: PollStatus) => {
   if (newStatus !== PollStatus.CLOSED) {
-    throw new BadRequestException('New status must be CLOSED');
+    throw new BadRequestException('New status must be CLOSED.');
   }
 };
 
-const validatePollExists = async (pollId: number, manager: EntityManager) => {
-  const poll = await manager.findOne(PollEntity, {
-    where: { id: pollId },
-    relations: ['author'],
-    select: { author: { id: true } },
+const validatePollExists = async ({
+  pollId,
+  authorId,
+  where,
+  relations = ['author'],
+  select = { author: { id: true } },
+  entityManager,
+}: {
+  pollId: number;
+  authorId?: number;
+  where?: FindOptionsWhere<PollEntity> | FindOptionsWhere<PollEntity>[];
+  relations?: FindOptionsRelations<PollEntity> | string[];
+  select?: FindOptionsSelect<PollEntity>;
+  entityManager: EntityManager;
+}) => {
+  const poll = await entityManager.findOne(PollEntity, {
+    where: { id: pollId, author: { id: authorId }, ...where },
+    relations,
+    select,
   });
+
   if (!poll) {
-    throw new NotFoundException('Poll not found');
+    throw new NotFoundException('Poll not found.');
   }
 
   return poll;
 };
 
-const validatePollAuthor = (poll: PollEntity, user: DecodedUser) => {
-  if (poll.author.id !== user.userId) {
-    throw new BadRequestException('You are not the author of this poll');
+const validatePollAuthor = ({ authorId, userId }: { authorId: number; userId: number }) => {
+  if (authorId !== userId) {
+    throw new BadRequestException('You are not the author of this poll.');
   }
 };
 
-const validatePollStatus = (pollStatus: PollStatus, newStatus: PollStatus) => {
+const validatePollStatus = ({ pollStatus, newStatus }: { pollStatus: PollStatus; newStatus: PollStatus }) => {
   if (newStatus === pollStatus) {
-    throw new BadRequestException('Poll is already in this status');
+    throw new BadRequestException('Poll is already in this status.');
   }
 };
 
-const validateAnsweredQuestions = async (userId: number, userAnswers: UserAnswer[], entityManager: EntityManager) => {
-  const questionIds = userAnswers.map(answer => answer.questionId);
-
+const validatePollAnswered = async ({
+  pollId,
+  userId,
+  entityManager,
+}: {
+  pollId: number;
+  userId: number;
+  entityManager: EntityManager;
+}) => {
   const existingAnswers = await entityManager.find(UserAnswerEntity, {
     where: {
       user: { id: userId },
-      question: { id: In(questionIds) },
+      poll: { id: pollId },
     },
   });
 
   if (existingAnswers.length > 0) {
-    throw new BadRequestException('You have already answered this poll');
+    throw new BadRequestException('You have already answered this poll.');
   }
-  throw new BadRequestException('You have already answered this poll');
+};
+
+const validateAnyoneAnswered = async ({ pollId, entityManager }: { pollId: number; entityManager: EntityManager }) => {
+  const existingAnswers = await entityManager.find(UserAnswerEntity, {
+    where: {
+      poll: { id: pollId },
+    },
+  });
+
+  if (existingAnswers.length > 0) {
+    throw new BadRequestException('You cant update this poll. Someone has already answered this poll.');
+  }
 };
 
 export {
@@ -70,5 +100,6 @@ export {
   validatePollExists,
   validatePollAuthor,
   validatePollStatus,
-  validateAnsweredQuestions,
+  validatePollAnswered,
+  validateAnyoneAnswered,
 };

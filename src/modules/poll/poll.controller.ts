@@ -20,7 +20,7 @@ export class PollController {
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', ParseIntPipe) limit: number,
   ): Promise<PollsByPage> {
-    return await this.pollsService.findAll({ page, limit });
+    return await this.pollsService.findAllPolls({ page, limit });
   }
 
   @Get('own')
@@ -40,6 +40,11 @@ export class PollController {
   @Get('answers')
   async getAllAnswers() {
     return this.pollsService.getAllAnswers();
+  }
+
+  @Get('user-answers')
+  async getAllUserAnswers() {
+    return this.pollsService.getAllUserAnswers();
   }
 
   @Get(':pollId/statistics')
@@ -65,7 +70,7 @@ export class PollController {
   async closePoll(
     @Param('pollId', ParseIntPipe) pollId: number,
     @CurrentUser() user: DecodedUser,
-  ): Promise<{ message: string }> {
+  ): Promise<PollEntity | null> {
     return this.pollsService.closePoll({ user, pollId, newStatus: PollStatus.CLOSED });
   }
 
@@ -74,7 +79,7 @@ export class PollController {
     @Body() pollUpdateDto: PollUpdateDto,
     @Param('pollId', ParseIntPipe) pollId: number,
     @CurrentUser() user: DecodedUser,
-  ): Promise<{ message: string }> {
+  ): Promise<PollEntity | null> {
     return this.pollsService.updatePoll({ user, pollId, pollUpdateDto });
   }
 

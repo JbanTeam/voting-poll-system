@@ -10,7 +10,7 @@ content-type: application/json
 
 {
   "name": "Vital",
-  "email": "jttt@mail.ru",
+  "email": "jt@mail.ru",
   "password": "11111111",
   "confirmPassword": "11111111"
 }
@@ -20,7 +20,7 @@ POST http://localhost:5000/api/auth/login HTTP/1.1
 content-type: application/json
 
 {
-  "email": "jt@mail.ru",
+  "email": "jtt@mail.ru",
   "password": "11111111"
 }
 
@@ -30,25 +30,35 @@ content-type: application/json
 ### Get all polls
 GET http://localhost:5000/api/polls?page=1&limit=20
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
 
 ### Get own polls
 GET http://localhost:5000/api/polls/own?page=1&limit=20
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
+
+### Get all questions
+GET http://localhost:5000/api/polls/questions
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
+
+### Get all user answers
+GET http://localhost:5000/api/polls/user-answers
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
 
 ### Get poll statistics
-GET http://localhost:5000/api/polls/2/statistics
+GET http://localhost:5000/api/polls/1/statistics
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
 
 ### Create poll
 POST http://localhost:5000/api/polls HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
 
 {
-  "title": "Super poll2",
+  "title": "Super poll",
   "description": "super description",
   "questions": [
     {
@@ -73,16 +83,35 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 ### Close poll
 PATCH http://localhost:5000/api/polls/2/close HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
+
+### Update poll
+PATCH http://localhost:5000/api/polls/1/update HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
+
+{
+  "title": "Updated Poll",
+  "questions": [
+    {
+      "id": 1,
+      "text": "Updated Question 1",
+      "answers": [
+        { "id": 1, "text": "Updated Answer 1" },
+        { "text": "New Answer" }
+      ]
+    }
+  ]
+}
 
 ### Save user answers
-POST http://localhost:5000/api/polls/2/save-answers HTTP/1.1
+POST http://localhost:5000/api/polls/1/save-answers HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
 
 {
   "userAnswers": [
-    {"questionId": 1, "answerId": 2},
+    {"questionId": 1, "answerId": 1},
     {"questionId": 2, "answerId": 4}
   ]
 }
@@ -90,4 +119,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 ### Delete all polls
 DELETE http://localhost:5000/api/polls
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczODkzNTg4OSwiZXhwIjoxNzM5NTQwNjg5fQ.jANuOJjTV_00mm_tdo94IQdiQ9_Irz8ByL_H-0z3WpA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
