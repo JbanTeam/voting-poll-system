@@ -26,11 +26,6 @@ export class PollService {
     @InjectRepository(PollEntity)
     private readonly pollsRepository: Repository<PollEntity>,
     @InjectRepository(QuestionEntity)
-    private readonly questionsRepository: Repository<QuestionEntity>,
-    @InjectRepository(AnswerEntity)
-    private readonly answersRepository: Repository<AnswerEntity>,
-    @InjectRepository(UserAnswerEntity)
-    private readonly userAnswersRepository: Repository<UserAnswerEntity>,
     private readonly pollStatisticService: PollStatisticService,
   ) {}
 
@@ -66,19 +61,7 @@ export class PollService {
     };
   }
 
-  async getAllQuestions(): Promise<QuestionEntity[]> {
-    return this.questionsRepository.find({ relations: ['poll', 'answers'] });
-  }
-
-  async getAllAnswers(): Promise<AnswerEntity[]> {
-    return this.answersRepository.find({ relations: ['question'] });
-  }
-
-  async getAllUserAnswers(): Promise<UserAnswerEntity[]> {
-    return this.userAnswersRepository.find({ relations: ['poll'] });
-  }
-
-  async create({ pollsDto, user }: { pollsDto: PollDto; user: DecodedUser }): Promise<PollEntity> {
+  async createPoll({ pollsDto, user }: { pollsDto: PollDto; user: DecodedUser }): Promise<PollEntity> {
     return this.pollsRepository.manager.transaction(async entityManager => {
       const poll = entityManager.create(PollEntity, {
         ...pollsDto,
@@ -102,6 +85,18 @@ export class PollService {
       });
 
       return fullPoll;
+    });
+  }
+
+  async deletePoll({ user, pollId }: { user: DecodedUser; pollId: number }): Promise<{ message: string }> {
+    return this.pollsRepository.manager.transaction(async entityManager => {
+      await validateUserExists({ userId: user.userId, entityManager });
+
+      await validatePollExists({ pollId, authorId: user.userId, entityManager });
+
+      await entityManager.delete(PollEntity, { id: pollId });
+
+      return { message: 'Poll deleted successfully.' };
     });
   }
 
@@ -198,10 +193,6 @@ export class PollService {
 
       return await this.pollStatisticService.getPollStatistics({ pollId, entityManager });
     });
-  }
-
-  async deleteAll() {
-    return this.pollsRepository.delete({});
   }
 }
 

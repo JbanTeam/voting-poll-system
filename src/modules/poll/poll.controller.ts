@@ -32,21 +32,6 @@ export class PollController {
     return await this.pollsService.findOwnPolls({ page, limit, user });
   }
 
-  @Get('questions')
-  async getAllQuestions() {
-    return this.pollsService.getAllQuestions();
-  }
-
-  @Get('answers')
-  async getAllAnswers() {
-    return this.pollsService.getAllAnswers();
-  }
-
-  @Get('user-answers')
-  async getAllUserAnswers() {
-    return this.pollsService.getAllUserAnswers();
-  }
-
   @Get(':pollId/statistics')
   async getPollStatistics(@Param('pollId', ParseIntPipe) pollId: number) {
     return await this.pollStatisticService.getPollStatistics({ pollId });
@@ -54,7 +39,7 @@ export class PollController {
 
   @Post()
   async createPoll(@Body() pollsDto: PollDto, @CurrentUser() user: DecodedUser): Promise<PollEntity> {
-    return this.pollsService.create({ pollsDto, user });
+    return this.pollsService.createPoll({ pollsDto, user });
   }
 
   @Post(':pollId/save-answers')
@@ -83,8 +68,8 @@ export class PollController {
     return this.pollsService.updatePoll({ user, pollId, pollUpdateDto });
   }
 
-  @Delete()
-  async deletePolls() {
-    return this.pollsService.deleteAll();
+  @Delete(':pollId')
+  async deletePoll(@Param('pollId', ParseIntPipe) pollId: number, @CurrentUser() user: DecodedUser) {
+    return this.pollsService.deletePoll({ user, pollId });
   }
 }

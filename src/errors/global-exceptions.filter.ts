@@ -27,8 +27,7 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
       errorString = String(httpStatusMap.get(status));
     }
 
-    // TODO: add logging
-    console.log(exception);
+    this.logger.log(exception);
 
     this.logger.error(`HTTP ${status} Error: ${request.method} ${request.url} - ${String(exception)}`);
 

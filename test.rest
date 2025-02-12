@@ -37,16 +37,6 @@ GET http://localhost:5000/api/polls/own?page=1&limit=20
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
 
-### Get all questions
-GET http://localhost:5000/api/polls/questions
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
-
-### Get all user answers
-GET http://localhost:5000/api/polls/user-answers
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
-
 ### Get poll statistics
 GET http://localhost:5000/api/polls/1/statistics
 content-type: application/json
@@ -94,7 +84,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
   "title": "Updated Poll",
   "questions": [
     {
-      "id": 1,
+      "id": 1, //с id обновится существующий question, answer; без id будет создан новый
       "text": "Updated Question 1",
       "answers": [
         { "id": 1, "text": "Updated Answer 1" },
@@ -116,7 +106,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
   ]
 }
 
-### Delete all polls
-DELETE http://localhost:5000/api/polls
+### Delete poll
+DELETE http://localhost:5000/api/polls/2
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTMwMDA2MiwiZXhwIjoxNzM5OTA0ODYyfQ.B4oSHMQ_ZLeWAFNy_Q3gPvlY7G53Lgc0pUT3xi1hw48
