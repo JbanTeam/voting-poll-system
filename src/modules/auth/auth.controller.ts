@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Public } from 'src/utils/decorators/public.decorator';
+import { CurrentUser } from 'src/utils/decorators/current-user.decorator';
+import { DecodedUser } from 'src/types/types';
 
 @Controller('auth')
 export class AuthController {
@@ -10,14 +12,25 @@ export class AuthController {
 
   @Post('register')
   @Public()
-  async register(@Body() registerDto: RegisterDto): Promise<{ token: string }> {
+  async register(@Body() registerDto: RegisterDto): Promise<{ accessToken: string; refreshToken: string }> {
     return this.authService.register(registerDto);
   }
 
   @Post('login')
   @HttpCode(200)
   @Public()
-  async login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
+  async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string; refreshToken: string }> {
     return this.authService.login(loginDto);
+  }
+
+  @Post('logout')
+  async logout(@CurrentUser() user: DecodedUser) {
+    return this.authService.logout(user.userId);
+  }
+
+  @Post('refresh-token')
+  @Public()
+  async refreshToken(@Body('refreshToken') refreshToken: string) {
+    return this.authService.refreshToken(refreshToken);
   }
 }

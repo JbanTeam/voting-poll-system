@@ -21,6 +21,9 @@ export class UserEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column({ type: 'varchar', nullable: true })
+  refreshToken: string | null;
+
   @OneToMany(() => PollEntity, poll => poll.author, { cascade: true })
   polls: PollEntity[];
 }

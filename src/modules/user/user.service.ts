@@ -30,4 +30,8 @@ export class UserService {
   async findById(id: number): Promise<UserEntity | null> {
     return this.usersRepository.findOne({ where: { id } });
   }
+
+  async updateRefreshToken({ userId, refreshToken }: { userId: number; refreshToken: string | null }): Promise<void> {
+    await this.usersRepository.update({ id: userId }, { refreshToken });
+  }
 }

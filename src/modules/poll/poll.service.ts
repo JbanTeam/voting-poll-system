@@ -24,13 +24,12 @@ import {
 export class PollService {
   constructor(
     @InjectRepository(PollEntity)
-    private readonly pollsRepository: Repository<PollEntity>,
-    @InjectRepository(QuestionEntity)
+    private readonly pollRepository: Repository<PollEntity>,
     private readonly pollStatisticService: PollStatisticService,
   ) {}
 
   async findAllPolls({ page, limit }: { page: number; limit: number }): Promise<PollsByPage> {
-    const [polls, count] = await this.pollsRepository.findAndCount({
+    const [polls, count] = await this.pollRepository.findAndCount({
       select: ['id', 'title', 'description', 'createdAt'],
       where: { status: PollStatus.ACTIVE },
       take: limit,
@@ -46,7 +45,7 @@ export class PollService {
   }
 
   async findOwnPolls({ page, limit, user }: { page: number; limit: number; user: DecodedUser }): Promise<PollsByPage> {
-    const [polls, count] = await this.pollsRepository.findAndCount({
+    const [polls, count] = await this.pollRepository.findAndCount({
       select: ['id', 'title', 'description', 'status', 'createdAt', 'updatedAt', 'closedAt'],
       where: { author: { id: user.userId } },
       take: limit,
@@ -62,7 +61,7 @@ export class PollService {
   }
 
   async createPoll({ pollsDto, user }: { pollsDto: PollDto; user: DecodedUser }): Promise<PollEntity> {
-    return this.pollsRepository.manager.transaction(async entityManager => {
+    return this.pollRepository.manager.transaction(async entityManager => {
       const poll = entityManager.create(PollEntity, {
         ...pollsDto,
         author: { id: user.userId },
@@ -89,7 +88,7 @@ export class PollService {
   }
 
   async deletePoll({ user, pollId }: { user: DecodedUser; pollId: number }): Promise<{ message: string }> {
-    return this.pollsRepository.manager.transaction(async entityManager => {
+    return this.pollRepository.manager.transaction(async entityManager => {
       await validateUserExists({ userId: user.userId, entityManager });
 
       await validatePollExists({ pollId, authorId: user.userId, entityManager });
@@ -111,12 +110,12 @@ export class PollService {
   }): Promise<PollEntity | null> {
     validateNewStatus(newStatus);
 
-    const entityManager = this.pollsRepository.manager;
+    const entityManager = this.pollRepository.manager;
     const poll = await validatePollExists({ pollId, authorId: user.userId, entityManager });
 
     validatePollStatus({ pollStatus: poll.status, newStatus });
 
-    await this.pollsRepository.update({ id: pollId }, { status: newStatus, closedAt: new Date() });
+    await this.pollRepository.update({ id: pollId }, { status: newStatus, closedAt: new Date() });
 
     return entityManager.findOne(PollEntity, {
       where: { id: pollId },
@@ -133,7 +132,7 @@ export class PollService {
     pollId: number;
     pollUpdateDto: PollUpdateDto;
   }): Promise<PollEntity | null> {
-    return this.pollsRepository.manager.transaction(async entityManager => {
+    return this.pollRepository.manager.transaction(async entityManager => {
       await validateUserExists({ userId: user.userId, entityManager });
 
       const poll = await validatePollExists({
@@ -171,7 +170,7 @@ export class PollService {
     const { userId } = decodedUser;
     const { userAnswers } = userAnswersDto;
 
-    return this.pollsRepository.manager.transaction(async entityManager => {
+    return this.pollRepository.manager.transaction(async entityManager => {
       await validateUserExists({ userId, entityManager });
 
       await validatePollExists({ pollId, where: { status: PollStatus.ACTIVE }, entityManager });
