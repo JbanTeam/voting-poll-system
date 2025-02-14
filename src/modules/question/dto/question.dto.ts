@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import { ArrayNotEmpty, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
-import { AnswerDto } from 'src/modules/answer/dto/answer.dto';
+
+import { AnswerDto } from '@modules/answer/dto/answer.dto';
 
 export class QuestionDto {
   @IsString({ message: 'Question must be a string' })

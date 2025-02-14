@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+
 import { PollService } from './poll.service';
 import { PollEntity, PollStatus } from './poll.entity';
 import { PollDto } from './dto/poll.dto';
-import { CurrentUser } from 'src/utils/decorators/current-user.decorator';
-import { DecodedUser, PollsByPage } from 'src/types/types';
+import { CurrentUser } from '@src/utils/decorators/current-user.decorator';
+import { DecodedUser, PollsByPage } from '@src/types/types';
 import { UserAnswerDto } from '../user-answer/dto/user-answer.dto';
 import { PollUpdateDto } from './dto/poll-update.dto';
 import { PollStatisticService } from '../poll-statistics/poll-statistic.service';

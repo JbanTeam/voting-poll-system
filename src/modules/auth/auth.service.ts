@@ -5,7 +5,7 @@ import { UserService } from '../user/user.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { HashService } from './hash/hash.service';
-import { DecodedUser } from 'src/types/types';
+import { DecodedUser } from '@src/types/types';
 
 @Injectable()
 export class AuthService {

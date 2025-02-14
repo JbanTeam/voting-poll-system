@@ -1,4 +1,4 @@
-import { PollEntity } from 'src/modules/poll/poll.entity';
+import { PollEntity } from '@modules/poll/poll.entity';
 
 type DecodedUser = {
   userId: number;

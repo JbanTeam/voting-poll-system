@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { AnswerUpdateDto } from 'src/modules/answer/dto/answer-update.dto';
+
+import { AnswerUpdateDto } from '@modules/answer/dto/answer-update.dto';
 
 export class QuestionUpdateDto {
   @IsNumber({}, { message: 'Question id must be a number' })

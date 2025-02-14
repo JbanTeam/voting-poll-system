@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-
-import { PollStatistics } from 'src/types/types';
-import { AnswerEntity } from '../answer/answer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+
+import { PollStatistics } from '../../types/types';
+import { AnswerEntity } from '../answer/answer.entity';
 import { EntityManager, Repository } from 'typeorm';
 import { UserAnswerEntity } from '../user-answer/user-answer.entity';
 import { PollStatisticsEntity } from '../poll-statistics/poll-statistics.entity';

@@ -1,7 +1,8 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
-import { Public } from 'src/utils/decorators/public.decorator';
+import { Public } from '@src/utils/decorators/public.decorator';
 
 @Controller('users')
 export class UserController {

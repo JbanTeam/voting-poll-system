@@ -1,5 +1,6 @@
-import { PollEntity } from 'src/modules/poll/poll.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+
+import { PollEntity } from '../poll/poll.entity';
 
 @Entity('user')
 export class UserEntity {

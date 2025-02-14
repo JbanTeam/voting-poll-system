@@ -1,10 +1,11 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Patch } from '@nestjs/common';
+
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { Public } from 'src/utils/decorators/public.decorator';
-import { CurrentUser } from 'src/utils/decorators/current-user.decorator';
-import { DecodedUser } from 'src/types/types';
+import { Public } from '@src/utils/decorators/public.decorator';
+import { CurrentUser } from '@src/utils/decorators/current-user.decorator';
+import { DecodedUser } from '@src/types/types';
 
 @Controller('auth')
 export class AuthController {
@@ -23,7 +24,7 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @Post('logout')
+  @Patch('logout')
   async logout(@CurrentUser() user: DecodedUser) {
     return this.authService.logout(user.userId);
   }

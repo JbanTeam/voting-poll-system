@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 import { PollDto } from './dto/poll.dto';
 import { PollEntity, PollStatus } from './poll.entity';
-import { DecodedUser, PollsByPage, PollStatistics } from 'src/types/types';
+import { DecodedUser, PollsByPage, PollStatistics } from '@src/types/types';
 import { QuestionEntity } from '../question/question.entity';
 import { AnswerEntity } from '../answer/answer.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
 import { UserAnswerEntity } from '../user-answer/user-answer.entity';
 import { UserAnswerDto } from '../user-answer/dto/user-answer.dto';
 import { PollUpdateDto } from './dto/poll-update.dto';
@@ -18,7 +18,7 @@ import {
   validatePollExists,
   validatePollStatus,
   validateUserExists,
-} from 'src/utils/checkExists';
+} from '@src/utils/checkExists';
 
 @Injectable()
 export class PollService {

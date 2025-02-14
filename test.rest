@@ -1,11 +1,17 @@
+@hostname = localhost
+@port = 5000
+@host = {{hostname}}:{{port}}/api
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTUyOTE2MCwiZXhwIjoxNzM5NTMyNzYwfQ.4hSKu33bCNxDUDozwDi9sWeuzqTBgefNqODV_FwQkUs
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTUyODcxMywiZXhwIjoxNzQwMTMzNTEzfQ.lFQN8qp3IUrFNQ7QyACoaXazn6VbY2OfDPxn3adJ8Ac
+
 ### USERS ************************************************
 ### USERS ************************************************
 
 ### Get all users
-GET http://localhost:5000/api/users
+GET http://{{host}}/users
 
 ### Register
-POST http://localhost:5000/api/auth/register HTTP/1.1
+POST http://{{host}}/auth/register HTTP/1.1
 content-type: application/json
 
 {
@@ -16,7 +22,7 @@ content-type: application/json
 }
 
 ### Login
-POST http://localhost:5000/api/auth/login HTTP/1.1
+POST http://{{host}}/auth/login HTTP/1.1
 content-type: application/json
 
 {
@@ -24,36 +30,41 @@ content-type: application/json
   "password": "11111111"
 }
 
+### Logout
+PATCH http://{{host}}/auth/logout HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{accessToken}}
+
 ### Update access token
-POST http://localhost:5000/api/auth/refresh-token HTTP/1.1
+POST http://{{host}}/auth/refresh-token HTTP/1.1
 content-type: application/json
 
 {
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTQ2ODQ1OSwiZXhwIjoxNzM5NDY4NjM5fQ.1FOAGRlABKa5bwkBrW0d2pm8LSBjteKdKalbK_H82X8"
+  "refreshToken": "{{refreshToken}}"
 }
 
 ### POLLS ************************************************
 ### POLLS ************************************************
 
 ### Get all polls
-GET http://localhost:5000/api/polls?page=1&limit=20
+GET http://{{host}}/polls?page=1&limit=20
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTQ2ODYwNSwiZXhwIjoxNzM5NDY4NzI1fQ.e85y3dTfIwwogQeFmAZolbOeJf3_OTUVu1AgVhVYq2A
+Authorization: Bearer {{accessToken}}
 
 ### Get own polls
-GET http://localhost:5000/api/polls/own?page=1&limit=20
+GET http://{{host}}/polls/own?page=1&limit=20
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTQ2NDkyMywiZXhwIjoxNzM5NDY4NTIzfQ.V8mDuahdhxHs13M92LuCYRiAfmSEuItPOX1q-29FcX0
+Authorization: Bearer {{accessToken}}
 
 ### Get poll statistics
-GET http://localhost:5000/api/polls/1/statistics
+GET http://{{host}}/polls/1/statistics
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTQ2NDkyMywiZXhwIjoxNzM5NDY4NTIzfQ.V8mDuahdhxHs13M92LuCYRiAfmSEuItPOX1q-29FcX0
+Authorization: Bearer {{accessToken}}
 
 ### Create poll
-POST http://localhost:5000/api/polls HTTP/1.1
+POST http://{{host}}/polls HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTQ2NDkyMywiZXhwIjoxNzM5NDY4NTIzfQ.V8mDuahdhxHs13M92LuCYRiAfmSEuItPOX1q-29FcX0
+Authorization: Bearer {{accessToken}}
 
 {
   "title": "Super poll",
@@ -79,14 +90,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 }
 
 ### Close poll
-PATCH http://localhost:5000/api/polls/2/close HTTP/1.1
+PATCH http://{{host}}/polls/2/close HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTQ2NDkyMywiZXhwIjoxNzM5NDY4NTIzfQ.V8mDuahdhxHs13M92LuCYRiAfmSEuItPOX1q-29FcX0
+Authorization: Bearer {{accessToken}}
 
 ### Update poll
-PATCH http://localhost:5000/api/polls/1/update HTTP/1.1
+PATCH http://{{host}}/polls/1/update HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTQ2NDkyMywiZXhwIjoxNzM5NDY4NTIzfQ.V8mDuahdhxHs13M92LuCYRiAfmSEuItPOX1q-29FcX0
+Authorization: Bearer {{accessToken}}
 
 {
   "title": "Updated Poll",
@@ -103,9 +114,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 }
 
 ### Save user answers
-POST http://localhost:5000/api/polls/1/save-answers HTTP/1.1
+POST http://{{host}}/polls/1/save-answers HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTQ2NDkyMywiZXhwIjoxNzM5NDY4NTIzfQ.V8mDuahdhxHs13M92LuCYRiAfmSEuItPOX1q-29FcX0
+Authorization: Bearer {{accessToken}}
 
 {
   "userAnswers": [
@@ -115,6 +126,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 }
 
 ### Delete poll
-DELETE http://localhost:5000/api/polls/2
+DELETE http://{{host}}/polls/2
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTQ2NDkyMywiZXhwIjoxNzM5NDY4NTIzfQ.V8mDuahdhxHs13M92LuCYRiAfmSEuItPOX1q-29FcX0
+Authorization: Bearer {{accessToken}}

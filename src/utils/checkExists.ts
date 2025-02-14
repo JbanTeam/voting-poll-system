@@ -1,8 +1,9 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { PollEntity, PollStatus } from 'src/modules/poll/poll.entity';
-import { UserAnswerEntity } from 'src/modules/user-answer/user-answer.entity';
-import { UserEntity } from 'src/modules/user/user.entity';
 import { EntityManager, FindOptionsRelations, FindOptionsSelect, FindOptionsWhere } from 'typeorm';
+
+import { PollEntity, PollStatus } from '@modules/poll/poll.entity';
+import { UserAnswerEntity } from '@modules/user-answer/user-answer.entity';
+import { UserEntity } from '@modules/user/user.entity';
 
 const validateUserExists = async ({ userId, entityManager }: { userId: number; entityManager: EntityManager }) => {
   const user = await entityManager.findOne(UserEntity, {

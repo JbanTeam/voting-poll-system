@@ -1,7 +1,8 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger } from '@nestjs/common';
 import { JsonWebTokenError, TokenExpiredError } from '@nestjs/jwt';
 import { Request, Response } from 'express';
-import { httpStatusMap } from 'src/utils/constants';
+
+import { httpStatusMap } from '@src/utils/constants';
 
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {
