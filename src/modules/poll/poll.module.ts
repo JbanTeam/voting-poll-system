@@ -4,12 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PollService } from './poll.service';
 import { PollController } from './poll.controller';
 import { PollEntity } from './poll.entity';
-import { QuestionEntity } from '../question/question.entity';
-import { AnswerEntity } from '../answer/answer.entity';
-import { UserAnswerEntity } from '../user-answer/user-answer.entity';
-import { PollStatisticsEntity } from '../poll-statistics/poll-statistics.entity';
-import { UserEntity } from '../user/user.entity';
-import { PollStatisticService } from '../poll-statistics/poll-statistic.service';
+import { UserEntity } from '@modules/user/user.entity';
+import { QuestionEntity } from '@modules/question/question.entity';
+import { AnswerEntity } from '@modules/answer/answer.entity';
+import { UserAnswerEntity } from '@modules/user-answer/user-answer.entity';
+import { PollStatisticsEntity } from '@modules/poll-statistics/poll-statistics.entity';
+import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.service';
 
 @Module({
   imports: [

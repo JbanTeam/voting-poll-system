@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { AnswerEntity } from '../answer/answer.entity';
-import { PollEntity } from '../poll/poll.entity';
-import { QuestionEntity } from '../question/question.entity';
+import { AnswerEntity } from '@modules/answer/answer.entity';
+import { PollEntity } from '@modules/poll/poll.entity';
+import { QuestionEntity } from '@modules/question/question.entity';
 
 @Entity('poll_statistics')
 export class PollStatisticsEntity {

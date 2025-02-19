@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
 import { IsEqual } from '@src/utils/validators/match-fields.validator';
 
 export class RegisterDto {

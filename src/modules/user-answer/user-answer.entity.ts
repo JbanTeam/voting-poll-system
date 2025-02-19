@@ -1,9 +1,9 @@
 import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { UserEntity } from '../user/user.entity';
-import { QuestionEntity } from '../question/question.entity';
-import { AnswerEntity } from '../answer/answer.entity';
-import { PollEntity } from '../poll/poll.entity';
+import { UserEntity } from '@modules/user/user.entity';
+import { QuestionEntity } from '@modules/question/question.entity';
+import { AnswerEntity } from '@modules/answer/answer.entity';
+import { PollEntity } from '@modules/poll/poll.entity';
 
 @Entity('user_answer')
 export class UserAnswerEntity {

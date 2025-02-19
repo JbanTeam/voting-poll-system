@@ -1,18 +1,18 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 
 import { PollService } from './poll.service';
-import { PollEntity, PollStatus } from './poll.entity';
 import { PollDto } from './dto/poll.dto';
-import { CurrentUser } from '@src/utils/decorators/current-user.decorator';
-import { DecodedUser, PollsByPage } from '@src/types/types';
-import { UserAnswerDto } from '../user-answer/dto/user-answer.dto';
 import { PollUpdateDto } from './dto/poll-update.dto';
-import { PollStatisticService } from '../poll-statistics/poll-statistic.service';
+import { PollEntity, PollStatus } from './poll.entity';
+import { UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
+import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.service';
+import { CurrentUser } from '@src/utils/decorators/current-user.decorator';
+import { DecodedUser, PollsByPage, PollStatistics } from '@src/types/types';
 
 @Controller('polls')
 export class PollController {
   constructor(
-    private pollsService: PollService,
+    private pollService: PollService,
     private pollStatisticService: PollStatisticService,
   ) {}
 
@@ -21,7 +21,7 @@ export class PollController {
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', ParseIntPipe) limit: number,
   ): Promise<PollsByPage> {
-    return await this.pollsService.findAllPolls({ page, limit });
+    return await this.pollService.findAllPolls({ page, limit });
   }
 
   @Get('own')
@@ -30,7 +30,7 @@ export class PollController {
     @Query('limit', ParseIntPipe) limit: number,
     @CurrentUser() user: DecodedUser,
   ): Promise<PollsByPage> {
-    return await this.pollsService.findOwnPolls({ page, limit, user });
+    return await this.pollService.findOwnPolls({ page, limit, user });
   }
 
   @Get(':pollId/statistics')
@@ -39,8 +39,8 @@ export class PollController {
   }
 
   @Post()
-  async createPoll(@Body() pollsDto: PollDto, @CurrentUser() user: DecodedUser): Promise<PollEntity> {
-    return this.pollsService.createPoll({ pollsDto, user });
+  async createPoll(@Body() pollDto: PollDto, @CurrentUser() user: DecodedUser): Promise<PollEntity> {
+    return this.pollService.createPoll({ pollDto, user });
   }
 
   @Post(':pollId/save-answers')
@@ -48,8 +48,8 @@ export class PollController {
     @Body() userAnswersDto: UserAnswerDto,
     @Param('pollId', ParseIntPipe) pollId: number,
     @CurrentUser() user: DecodedUser,
-  ) {
-    return this.pollsService.saveAnswers({ userAnswersDto, decodedUser: user, pollId });
+  ): Promise<PollStatistics> {
+    return this.pollService.saveAnswers({ userAnswersDto, user, pollId });
   }
 
   @Patch(':pollId/close')
@@ -57,7 +57,7 @@ export class PollController {
     @Param('pollId', ParseIntPipe) pollId: number,
     @CurrentUser() user: DecodedUser,
   ): Promise<PollEntity | null> {
-    return this.pollsService.closePoll({ user, pollId, newStatus: PollStatus.CLOSED });
+    return this.pollService.closePoll({ user, pollId, newStatus: PollStatus.CLOSED });
   }
 
   @Patch(':pollId/update')
@@ -66,11 +66,14 @@ export class PollController {
     @Param('pollId', ParseIntPipe) pollId: number,
     @CurrentUser() user: DecodedUser,
   ): Promise<PollEntity | null> {
-    return this.pollsService.updatePoll({ user, pollId, pollUpdateDto });
+    return this.pollService.updatePoll({ user, pollId, pollUpdateDto });
   }
 
   @Delete(':pollId')
-  async deletePoll(@Param('pollId', ParseIntPipe) pollId: number, @CurrentUser() user: DecodedUser) {
-    return this.pollsService.deletePoll({ user, pollId });
+  async deletePoll(
+    @Param('pollId', ParseIntPipe) pollId: number,
+    @CurrentUser() user: DecodedUser,
+  ): Promise<{ message: string }> {
+    return this.pollService.deletePoll({ user, pollId });
   }
 }

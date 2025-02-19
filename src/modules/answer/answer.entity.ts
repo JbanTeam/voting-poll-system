@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
 import { QuestionEntity } from '@modules/question/question.entity';
 
 @Entity('answer')

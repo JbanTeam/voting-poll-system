@@ -8,8 +8,9 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
-import { QuestionEntity } from '../question/question.entity';
+
+import { UserEntity } from '@modules/user/user.entity';
+import { QuestionEntity } from '@modules/question/question.entity';
 
 export enum PollStatus {
   ACTIVE = 'ACTIVE',

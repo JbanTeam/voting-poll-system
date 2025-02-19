@@ -1,7 +1,7 @@
 @hostname = localhost
 @port = 5000
 @host = {{hostname}}:{{port}}/api
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTUyOTE2MCwiZXhwIjoxNzM5NTMyNzYwfQ.4hSKu33bCNxDUDozwDi9sWeuzqTBgefNqODV_FwQkUs
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTg5NDc4NywiZXhwIjoxNzM5ODk4Mzg3fQ.apvbPxjm0fMROJcQRr-ogC_bou3vgBpcEolj9q8QhEY
 @refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTUyODcxMywiZXhwIjoxNzQwMTMzNTEzfQ.lFQN8qp3IUrFNQ7QyACoaXazn6VbY2OfDPxn3adJ8Ac
 
 ### USERS ************************************************
@@ -95,7 +95,7 @@ content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Update poll
-PATCH http://{{host}}/polls/1/update HTTP/1.1
+PATCH http://{{host}}/polls/4/update HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -103,10 +103,10 @@ Authorization: Bearer {{accessToken}}
   "title": "Updated Poll",
   "questions": [
     {
-      "id": 1, //с id обновится существующий question, answer; без id будет создан новый
+      "id": 7,
       "text": "Updated Question 1",
       "answers": [
-        { "id": 1, "text": "Updated Answer 1" },
+        { "id": 21, "text": "Updated Answer 1" },
         { "text": "New Answer" }
       ]
     }
@@ -114,18 +114,18 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Save user answers
-POST http://{{host}}/polls/1/save-answers HTTP/1.1
+POST http://{{host}}/polls/4/save-answers HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
   "userAnswers": [
-    {"questionId": 1, "answerId": 1},
-    {"questionId": 2, "answerId": 4}
+    {"questionId": 7, "answerId": 21},
+    {"questionId": 8, "answerId": 23}
   ]
 }
 
 ### Delete poll
-DELETE http://{{host}}/polls/2
+DELETE http://{{host}}/polls/1
 content-type: application/json
 Authorization: Bearer {{accessToken}}

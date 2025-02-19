@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { PollEntity } from '../poll/poll.entity';
-import { AnswerEntity } from '../answer/answer.entity';
+import { PollEntity } from '@modules/poll/poll.entity';
+import { AnswerEntity } from '@modules/answer/answer.entity';
 
 @Entity('question')
 export class QuestionEntity {

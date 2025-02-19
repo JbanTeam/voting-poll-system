@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
+import { PollUpdateDto } from './dto/poll-update.dto';
 import { PollDto } from './dto/poll.dto';
 import { PollEntity, PollStatus } from './poll.entity';
+import { QuestionEntity } from '@modules/question/question.entity';
+import { AnswerEntity } from '@modules/answer/answer.entity';
+import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.service';
+import { UserAnswerEntity } from '@modules/user-answer/user-answer.entity';
+import { UserAnswer, UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
 import { DecodedUser, PollsByPage, PollStatistics } from '@src/types/types';
-import { QuestionEntity } from '../question/question.entity';
-import { AnswerEntity } from '../answer/answer.entity';
-import { UserAnswerEntity } from '../user-answer/user-answer.entity';
-import { UserAnswerDto } from '../user-answer/dto/user-answer.dto';
-import { PollUpdateDto } from './dto/poll-update.dto';
-import { PollStatisticService } from '../poll-statistics/poll-statistic.service';
 import {
   validateAnyoneAnswered,
   validateNewStatus,
@@ -60,10 +60,10 @@ export class PollService {
     };
   }
 
-  async createPoll({ pollsDto, user }: { pollsDto: PollDto; user: DecodedUser }): Promise<PollEntity> {
+  async createPoll({ pollDto, user }: { pollDto: PollDto; user: DecodedUser }): Promise<PollEntity> {
     return this.pollRepository.manager.transaction(async entityManager => {
       const poll = entityManager.create(PollEntity, {
-        ...pollsDto,
+        ...pollDto,
         author: { id: user.userId },
       });
 
@@ -115,7 +115,7 @@ export class PollService {
 
     validatePollStatus({ pollStatus: poll.status, newStatus });
 
-    await this.pollRepository.update({ id: pollId }, { status: newStatus, closedAt: new Date() });
+    await entityManager.update(PollEntity, { id: pollId }, { status: newStatus, closedAt: new Date() });
 
     return entityManager.findOne(PollEntity, {
       where: { id: pollId },
@@ -147,7 +147,7 @@ export class PollService {
       poll.title = pollUpdateDto.title || poll.title;
       poll.description = pollUpdateDto.description || poll.description;
 
-      await updateQuestionsAndAnswers({ poll, pollUpdateDto, entityManager });
+      await this.updateQuestionsAndAnswers({ poll, pollUpdateDto, entityManager });
 
       const updatedPoll = await entityManager.save(PollEntity, poll);
 
@@ -158,16 +158,55 @@ export class PollService {
     });
   }
 
+  async updateQuestionsAndAnswers({
+    poll,
+    pollUpdateDto,
+    entityManager,
+  }: {
+    poll: PollEntity;
+    pollUpdateDto: PollUpdateDto;
+    entityManager: EntityManager;
+  }) {
+    if (pollUpdateDto.questions?.length) {
+      const newQuestionIds = pollUpdateDto.questions.map(q => q.id).filter(id => id !== undefined);
+
+      const questionsToDelete = poll.questions.filter(q => !newQuestionIds.includes(q.id));
+      await entityManager.remove(QuestionEntity, questionsToDelete);
+
+      poll.questions = await Promise.all(
+        pollUpdateDto.questions.map(async questionDto => {
+          const question = poll.questions.find(q => q.id === questionDto.id) || new QuestionEntity();
+          if (questionDto.text) question.text = questionDto.text;
+
+          if (questionDto.answers?.length && question?.answers?.length) {
+            const newAnswerIds = questionDto.answers.map(a => a.id).filter(id => id !== undefined);
+
+            const answersToDelete = question.answers.filter(a => !newAnswerIds.includes(a.id));
+            await entityManager.remove(AnswerEntity, answersToDelete);
+
+            question.answers = questionDto.answers.map(answerDto => {
+              const answer = question.answers.find(a => a.id === answerDto.id) || new AnswerEntity();
+              answer.text = answerDto.text;
+              return answer;
+            });
+          }
+
+          return question;
+        }),
+      );
+    }
+  }
+
   async saveAnswers({
     userAnswersDto,
-    decodedUser,
+    user,
     pollId,
   }: {
     userAnswersDto: UserAnswerDto;
-    decodedUser: DecodedUser;
+    user: DecodedUser;
     pollId: number;
   }): Promise<PollStatistics> {
-    const { userId } = decodedUser;
+    const { userId } = user;
     const { userAnswers } = userAnswersDto;
 
     return this.pollRepository.manager.transaction(async entityManager => {
@@ -177,13 +216,11 @@ export class PollService {
 
       await validatePollAnswered({ pollId, userId, entityManager });
 
-      const answers = userAnswers.map(answer => {
-        return entityManager.create(UserAnswerEntity, {
-          user: { id: userId },
-          question: { id: answer.questionId },
-          answer: { id: answer.answerId },
-          poll: { id: pollId },
-        });
+      const answers = await this.createUserAnswers({
+        userAnswers,
+        entityManager,
+        userId,
+        pollId,
       });
 
       await entityManager.save(UserAnswerEntity, answers);
@@ -193,43 +230,24 @@ export class PollService {
       return await this.pollStatisticService.getPollStatistics({ pollId, entityManager });
     });
   }
-}
-
-const updateQuestionsAndAnswers = async ({
-  poll,
-  pollUpdateDto,
-  entityManager,
-}: {
-  poll: PollEntity;
-  pollUpdateDto: PollUpdateDto;
-  entityManager: EntityManager;
-}) => {
-  if (pollUpdateDto.questions?.length) {
-    const newQuestionIds = pollUpdateDto.questions.map(q => q.id).filter(id => id !== undefined);
-
-    const questionsToDelete = poll.questions.filter(q => !newQuestionIds.includes(q.id));
-    await entityManager.remove(QuestionEntity, questionsToDelete);
-
-    poll.questions = await Promise.all(
-      pollUpdateDto.questions.map(async questionDto => {
-        const question = poll.questions.find(q => q.id === questionDto.id) || new QuestionEntity();
-        if (questionDto.text) question.text = questionDto.text;
-
-        if (questionDto.answers?.length) {
-          const newAnswerIds = questionDto.answers.map(a => a.id).filter(id => id !== undefined);
-
-          const answersToDelete = question.answers.filter(a => !newAnswerIds.includes(a.id));
-          await entityManager.remove(AnswerEntity, answersToDelete);
-
-          question.answers = questionDto.answers.map(answerDto => {
-            const answer = question.answers.find(a => a.id === answerDto.id) || new AnswerEntity();
-            answer.text = answerDto.text;
-            return answer;
-          });
-        }
-
-        return question;
-      }),
-    );
+  async createUserAnswers({
+    userAnswers,
+    entityManager,
+    userId,
+    pollId,
+  }: {
+    userAnswers: UserAnswer[];
+    entityManager: EntityManager;
+    userId: number;
+    pollId: number;
+  }) {
+    return userAnswers.map(answer => {
+      return entityManager.create(UserAnswerEntity, {
+        user: { id: userId },
+        question: { id: answer.questionId },
+        answer: { id: answer.answerId },
+        poll: { id: pollId },
+      });
+    });
   }
-};
+}

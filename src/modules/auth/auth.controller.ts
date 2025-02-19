@@ -25,11 +25,13 @@ export class AuthController {
   }
 
   @Patch('logout')
-  async logout(@CurrentUser() user: DecodedUser) {
+  @HttpCode(200)
+  async logout(@CurrentUser() user: DecodedUser): Promise<{ message: string }> {
     return this.authService.logout(user.userId);
   }
 
   @Post('refresh-token')
+  @HttpCode(200)
   @Public()
   async refreshToken(@Body('refreshToken') refreshToken: string) {
     return this.authService.refreshToken(refreshToken);
