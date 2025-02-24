@@ -8,7 +8,7 @@ import { PollStatisticsEntity } from '@modules/poll-statistics/poll-statistics.e
 import { PollStatistics } from '@src/types/types';
 
 @Injectable()
-export class PollStatisticService {
+export class PollStatisticsService {
   constructor(
     @InjectRepository(PollStatisticsEntity)
     private readonly pollStatisticsRepository: Repository<PollStatisticsEntity>,

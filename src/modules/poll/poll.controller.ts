@@ -5,7 +5,7 @@ import { PollDto } from './dto/poll.dto';
 import { PollUpdateDto } from './dto/poll-update.dto';
 import { PollEntity, PollStatus } from './poll.entity';
 import { UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
-import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.service';
+import { PollStatisticsService } from '@modules/poll-statistics/poll-statistics.service';
 import { CurrentUser } from '@src/utils/decorators/current-user.decorator';
 import { DecodedUser, PollsByPage, PollStatistics } from '@src/types/types';
 
@@ -13,7 +13,7 @@ import { DecodedUser, PollsByPage, PollStatistics } from '@src/types/types';
 export class PollController {
   constructor(
     private pollService: PollService,
-    private pollStatisticService: PollStatisticService,
+    private pollStatisticsService: PollStatisticsService,
   ) {}
 
   @Get()
@@ -35,7 +35,7 @@ export class PollController {
 
   @Get(':pollId/statistics')
   async getPollStatistics(@Param('pollId', ParseIntPipe) pollId: number) {
-    return await this.pollStatisticService.getPollStatistics({ pollId });
+    return await this.pollStatisticsService.getPollStatistics({ pollId });
   }
 
   @Post()

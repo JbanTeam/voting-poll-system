@@ -90,12 +90,12 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Close poll
-PATCH http://{{host}}/polls/2/close HTTP/1.1
+PATCH http://{{host}}/polls/1/close HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Update poll
-PATCH http://{{host}}/polls/4/update HTTP/1.1
+PATCH http://{{host}}/polls/1/update HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -103,10 +103,10 @@ Authorization: Bearer {{accessToken}}
   "title": "Updated Poll",
   "questions": [
     {
-      "id": 7,
+      "id": 1,
       "text": "Updated Question 1",
       "answers": [
-        { "id": 21, "text": "Updated Answer 1" },
+        { "id": 1, "text": "Updated Answer 1" },
         { "text": "New Answer" }
       ]
     }
@@ -114,14 +114,14 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Save user answers
-POST http://{{host}}/polls/4/save-answers HTTP/1.1
+POST http://{{host}}/polls/1/save-answers HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
   "userAnswers": [
-    {"questionId": 7, "answerId": 21},
-    {"questionId": 8, "answerId": 23}
+    {"questionId": 1, "answerId": 1},
+    {"questionId": 2, "answerId": 4}
   ]
 }
 

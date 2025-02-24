@@ -14,22 +14,47 @@ export class UserService {
 
   async findAll(): Promise<UserEntity[]> {
     return this.userRepository.find({
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+      },
       relations: {
         polls: true,
       },
     });
   }
-  async create(registerDto: RegisterDto): Promise<UserEntity> {
+  async create(registerDto: RegisterDto): Promise<Pick<UserEntity, 'id' | 'name' | 'createdAt'>> {
     const user = this.userRepository.create(registerDto);
-    return this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+    const returnUser: Pick<UserEntity, 'id' | 'name' | 'createdAt'> = {
+      id: savedUser.id,
+      name: savedUser.name,
+      createdAt: savedUser.createdAt,
+    };
+    return returnUser;
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
-    return this.userRepository.findOne({ where: { email } });
+    return this.userRepository.findOne({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+      },
+    });
   }
 
   async findById(id: number): Promise<UserEntity | null> {
-    return this.userRepository.findOne({ where: { id } });
+    return this.userRepository.findOne({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+      },
+    });
   }
 
   async updateRefreshToken({ userId, refreshToken }: { userId: number; refreshToken: string | null }): Promise<void> {

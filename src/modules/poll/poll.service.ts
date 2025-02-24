@@ -7,7 +7,7 @@ import { PollDto } from './dto/poll.dto';
 import { PollEntity, PollStatus } from './poll.entity';
 import { QuestionEntity } from '@modules/question/question.entity';
 import { AnswerEntity } from '@modules/answer/answer.entity';
-import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.service';
+import { PollStatisticsService } from '@modules/poll-statistics/poll-statistics.service';
 import { UserAnswerEntity } from '@modules/user-answer/user-answer.entity';
 import { UserAnswer, UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
 import { DecodedUser, PollsByPage, PollStatistics } from '@src/types/types';
@@ -25,7 +25,7 @@ export class PollService {
   constructor(
     @InjectRepository(PollEntity)
     private readonly pollRepository: Repository<PollEntity>,
-    private readonly pollStatisticService: PollStatisticService,
+    private readonly pollStatisticsService: PollStatisticsService,
   ) {}
 
   async findAllPolls({ page, limit }: { page: number; limit: number }): Promise<PollsByPage> {
@@ -77,7 +77,7 @@ export class PollService {
 
       const allAnswers = fullPoll.questions.flatMap(question => question.answers);
 
-      await this.pollStatisticService.createPollStatistics({
+      await this.pollStatisticsService.createPollStatistics({
         answers: allAnswers,
         pollId: savedPoll.id,
         entityManager,
@@ -225,9 +225,9 @@ export class PollService {
 
       await entityManager.save(UserAnswerEntity, answers);
 
-      await this.pollStatisticService.updatePollStatistics({ answers, pollId, entityManager });
+      await this.pollStatisticsService.updatePollStatistics({ answers, pollId, entityManager });
 
-      return await this.pollStatisticService.getPollStatistics({ pollId, entityManager });
+      return await this.pollStatisticsService.getPollStatistics({ pollId, entityManager });
     });
   }
   async createUserAnswers({

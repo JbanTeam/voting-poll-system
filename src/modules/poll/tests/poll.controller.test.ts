@@ -5,7 +5,7 @@ import { INestApplication, ExecutionContext } from '@nestjs/common';
 
 import { UserService } from '@modules/user/user.service';
 import { UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
-import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.service';
+import { PollStatisticsService } from '@modules/poll-statistics/poll-statistics.service';
 import { PollController } from '@modules/poll/poll.controller';
 import { PollService } from '@modules/poll/poll.service';
 import { PollDto } from '@modules/poll/dto/poll.dto';
@@ -90,7 +90,7 @@ const fullPoll = {
 describe('PollController', () => {
   let app: INestApplication;
   let pollService: PollService;
-  let pollStatisticService: PollStatisticService;
+  let pollStatisticsService: PollStatisticsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -109,7 +109,7 @@ describe('PollController', () => {
           },
         },
         {
-          provide: PollStatisticService,
+          provide: PollStatisticsService,
           useValue: {
             getPollStatistics: jest.fn(),
           },
@@ -139,7 +139,7 @@ describe('PollController', () => {
     await app.init();
 
     pollService = module.get<PollService>(PollService);
-    pollStatisticService = module.get<PollStatisticService>(PollStatisticService);
+    pollStatisticsService = module.get<PollStatisticsService>(PollStatisticsService);
   });
 
   afterEach(async () => {
@@ -182,7 +182,7 @@ describe('PollController', () => {
 
   it('should get poll statistics', async () => {
     const getPollStatisticsMock = jest
-      .spyOn(pollStatisticService, 'getPollStatistics')
+      .spyOn(pollStatisticsService, 'getPollStatistics')
       .mockResolvedValue(pollStatistics);
 
     const response = await request(app.getHttpServer()).get(`/polls/${pollId}/statistics`);

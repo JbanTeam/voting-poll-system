@@ -9,7 +9,7 @@ import { QuestionEntity } from '@modules/question/question.entity';
 import { AnswerEntity } from '@modules/answer/answer.entity';
 import { UserAnswerEntity } from '@modules/user-answer/user-answer.entity';
 import { PollStatisticsEntity } from '@modules/poll-statistics/poll-statistics.entity';
-import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.service';
+import { PollStatisticsService } from '@modules/poll-statistics/poll-statistics.service';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.s
     ]),
   ],
   controllers: [PollController],
-  providers: [PollService, PollStatisticService],
+  providers: [PollService, PollStatisticsService],
   exports: [PollService],
 })
 export class PollModule {}

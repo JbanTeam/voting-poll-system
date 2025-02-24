@@ -15,7 +15,7 @@ import { PollService } from '@modules/poll/poll.service';
 import { PollEntity, PollStatus } from '@modules/poll/poll.entity';
 import { PollDto } from '@modules/poll/dto/poll.dto';
 import { PollUpdateDto } from '@modules/poll/dto/poll-update.dto';
-import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.service';
+import { PollStatisticsService } from '@modules/poll-statistics/poll-statistics.service';
 import * as checkExists from '@src/utils/checkExists';
 import { DecodedUser, PollStatistics } from '@src/types/types';
 
@@ -100,6 +100,7 @@ const fullPoll = {
   ],
 } as PollEntity;
 
+// TODO: обновлять моки перед каждым тестом
 const mockEntityManager = {
   create: jest.fn<PollEntity, [typeof PollEntity, Partial<PollEntity>]>(),
   save: jest.fn(),
@@ -114,7 +115,7 @@ describe('PollService', () => {
   let app: INestApplication;
   let pollService: PollService;
   let pollRepository: Repository<PollEntity>;
-  let pollStatisticService: PollStatisticService;
+  let pollStatisticsService: PollStatisticsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -126,7 +127,7 @@ describe('PollService', () => {
           useValue: createMock<Repository<PollEntity>>(),
         },
         {
-          provide: PollStatisticService,
+          provide: PollStatisticsService,
           useValue: {
             getPollStatistics: jest.fn(),
             createPollStatistics: jest.fn(),
@@ -150,7 +151,7 @@ describe('PollService', () => {
     await app.init();
 
     pollService = module.get<PollService>(PollService);
-    pollStatisticService = module.get<PollStatisticService>(PollStatisticService);
+    pollStatisticsService = module.get<PollStatisticsService>(PollStatisticsService);
     pollRepository = module.get<Repository<PollEntity>>(getRepositoryToken(PollEntity));
   });
 
@@ -224,7 +225,7 @@ describe('PollService', () => {
     jest.spyOn(checkExists, 'validatePollExists').mockResolvedValue(fullPoll);
     pollRepository.manager.transaction = jest.fn().mockImplementation(cb => cb(mockEntityManager) as EntityManager);
     const createPollStatisticsMock = jest
-      .spyOn(pollStatisticService, 'createPollStatistics')
+      .spyOn(pollStatisticsService, 'createPollStatistics')
       .mockResolvedValue(undefined);
 
     const result = await pollService.createPoll({ pollDto, user: decodedUser });
@@ -355,10 +356,10 @@ describe('PollService', () => {
     jest.spyOn(checkExists, 'validatePollExists').mockResolvedValue(fullPoll);
     jest.spyOn(checkExists, 'validatePollAnswered').mockResolvedValue(undefined);
     jest.spyOn(pollService, 'createUserAnswers').mockResolvedValue(answers);
-    jest.spyOn(pollStatisticService, 'getPollStatistics').mockResolvedValue(pollStatistics);
+    jest.spyOn(pollStatisticsService, 'getPollStatistics').mockResolvedValue(pollStatistics);
     pollRepository.manager.transaction = jest.fn().mockImplementation(cb => cb(mockEntityManager) as EntityManager);
     const updatePollStatisticsMock = jest
-      .spyOn(pollStatisticService, 'updatePollStatistics')
+      .spyOn(pollStatisticsService, 'updatePollStatistics')
       .mockResolvedValue(undefined);
 
     const result = await pollService.saveAnswers({ userAnswersDto, user: decodedUser, pollId });

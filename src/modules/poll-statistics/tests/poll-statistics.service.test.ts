@@ -10,7 +10,7 @@ import { PollController } from '@modules/poll/poll.controller';
 import { PollService } from '@modules/poll/poll.service';
 import { UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
 import { UserAnswerEntity } from '@modules/user-answer/user-answer.entity';
-import { PollStatisticService } from '@modules/poll-statistics/poll-statistics.service';
+import { PollStatisticsService } from '@modules/poll-statistics/poll-statistics.service';
 import { PollStatisticsEntity } from '@modules/poll-statistics/poll-statistics.entity';
 import { DecodedUser } from '@src/types/types';
 
@@ -100,7 +100,7 @@ let mockQueryBuilder = {
 
 describe('PollStatisticsService', () => {
   let app: INestApplication;
-  let pollStatisticService: PollStatisticService;
+  let pollStatisticsService: PollStatisticsService;
   let pollStatisticsRepository: Repository<PollStatisticsEntity>;
 
   beforeEach(async () => {
@@ -108,7 +108,7 @@ describe('PollStatisticsService', () => {
       controllers: [PollController],
       providers: [
         PollService,
-        PollStatisticService,
+        PollStatisticsService,
         {
           provide: getRepositoryToken(PollEntity),
           useValue: createMock<Repository<PollEntity>>(),
@@ -133,7 +133,7 @@ describe('PollStatisticsService', () => {
     app = module.createNestApplication();
     await app.init();
 
-    pollStatisticService = module.get<PollStatisticService>(PollStatisticService);
+    pollStatisticsService = module.get<PollStatisticsService>(PollStatisticsService);
     pollStatisticsRepository = module.get<Repository<PollStatisticsEntity>>(getRepositoryToken(PollStatisticsEntity));
 
     mockInsertBuilder = {
@@ -163,7 +163,7 @@ describe('PollStatisticsService', () => {
   it('should get poll statistics', async () => {
     pollStatisticsRepository.manager.find = jest.fn().mockResolvedValue([pollStatisticsMock]);
 
-    const result = await pollStatisticService.getPollStatistics({ pollId });
+    const result = await pollStatisticsService.getPollStatistics({ pollId });
 
     expect(jest.spyOn(pollStatisticsRepository.manager, 'find')).toHaveBeenCalledWith(PollStatisticsEntity, {
       where: { poll: { id: pollId } },
@@ -179,7 +179,7 @@ describe('PollStatisticsService', () => {
 
     jest.spyOn(pollStatisticsRepository.manager, 'createQueryBuilder').mockReturnValue(mockQueryBuilder);
 
-    await pollStatisticService.createPollStatistics({
+    await pollStatisticsService.createPollStatistics({
       answers: fullPoll.questions.flatMap(question => question.answers),
       pollId,
       entityManager: pollStatisticsRepository.manager,
@@ -203,7 +203,7 @@ describe('PollStatisticsService', () => {
     mockQueryBuilder.getMany = jest.fn().mockResolvedValue(new Array(answers.length).fill(pollStatisticsMock));
     jest.spyOn(pollStatisticsRepository.manager, 'createQueryBuilder').mockReturnValue(mockQueryBuilder);
 
-    await pollStatisticService.updatePollStatistics({
+    await pollStatisticsService.updatePollStatistics({
       answers,
       pollId,
       entityManager: pollStatisticsRepository.manager,
@@ -241,7 +241,7 @@ describe('PollStatisticsService', () => {
     jest.spyOn(pollStatisticsRepository.manager, 'createQueryBuilder').mockReturnValue(mockQueryBuilder);
 
     await expect(
-      pollStatisticService.updatePollStatistics({
+      pollStatisticsService.updatePollStatistics({
         answers,
         pollId,
         entityManager: pollStatisticsRepository.manager,

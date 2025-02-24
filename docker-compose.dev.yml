@@ -4,8 +4,8 @@ services:
       target: development
     container_name: voting-dev-app
     volumes:
-      - ./:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./:/usr/app
+      - /usr/app/node_modules
     entrypoint: ['/bin/sh', '-c', '/usr/app/entrypoint.sh']
 
   db:
