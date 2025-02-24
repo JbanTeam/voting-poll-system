@@ -1,0 +1,27 @@
+services:
+  test-db:
+    image: postgres:15-alpine
+    container_name: voting-test-db
+    restart: always
+    env_file:
+      - .env.test
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - voting_pg_TEST_data:/var/lib/postgresql/data
+    ports:
+      - ${DB_PORT}:5432
+    networks:
+      - voting_TEST_db_network
+
+volumes:
+  voting_pg_TEST_data:
+networks:
+  voting_TEST_db_network:

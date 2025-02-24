@@ -2,7 +2,16 @@ services:
   app:
     build:
       target: development
+    container_name: voting-dev-app
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm run start:dev
+    entrypoint: ['/bin/sh', '-c', '/usr/app/entrypoint.sh']
+
+  db:
+    container_name: voting-dev-db
+    volumes:
+      - voting_pg_DEV_data:/var/lib/postgresql/data
+
+volumes:
+  voting_pg_DEV_data:
