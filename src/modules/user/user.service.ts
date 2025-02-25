@@ -18,18 +18,20 @@ export class UserService {
         id: true,
         name: true,
         createdAt: true,
+        email: true,
       },
       relations: {
         polls: true,
       },
     });
   }
-  async create(registerDto: RegisterDto): Promise<Pick<UserEntity, 'id' | 'name' | 'createdAt'>> {
+  async create(registerDto: RegisterDto): Promise<Pick<UserEntity, 'id' | 'name' | 'email' | 'createdAt'>> {
     const user = this.userRepository.create(registerDto);
     const savedUser = await this.userRepository.save(user);
-    const returnUser: Pick<UserEntity, 'id' | 'name' | 'createdAt'> = {
+    const returnUser: Pick<UserEntity, 'id' | 'name' | 'email' | 'createdAt'> = {
       id: savedUser.id,
       name: savedUser.name,
+      email: savedUser.email,
       createdAt: savedUser.createdAt,
     };
     return returnUser;
@@ -42,6 +44,8 @@ export class UserService {
         id: true,
         name: true,
         createdAt: true,
+        password: true,
+        email: true,
       },
     });
   }
@@ -53,6 +57,9 @@ export class UserService {
         id: true,
         name: true,
         createdAt: true,
+        password: true,
+        email: true,
+        refreshToken: true,
       },
     });
   }

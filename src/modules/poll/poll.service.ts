@@ -60,6 +60,14 @@ export class PollService {
     };
   }
 
+  async findPoll(pollId: number): Promise<PollEntity | null> {
+    return await this.pollRepository.findOne({
+      select: ['id', 'title', 'description', 'createdAt'],
+      relations: ['questions', 'questions.answers'],
+      where: { id: pollId },
+    });
+  }
+
   async createPoll({ pollDto, user }: { pollDto: PollDto; user: DecodedUser }): Promise<PollEntity> {
     return this.pollRepository.manager.transaction(async entityManager => {
       const poll = entityManager.create(PollEntity, {
