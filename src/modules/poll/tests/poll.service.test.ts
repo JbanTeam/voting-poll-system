@@ -100,8 +100,7 @@ const fullPoll = {
   ],
 } as PollEntity;
 
-// TODO: обновлять моки перед каждым тестом
-const mockEntityManager = {
+let mockEntityManager = {
   create: jest.fn<PollEntity, [typeof PollEntity, Partial<PollEntity>]>(),
   save: jest.fn(),
   delete: jest.fn(),
@@ -153,6 +152,16 @@ describe('PollService', () => {
     pollService = module.get<PollService>(PollService);
     pollStatisticsService = module.get<PollStatisticsService>(PollStatisticsService);
     pollRepository = module.get<Repository<PollEntity>>(getRepositoryToken(PollEntity));
+
+    mockEntityManager = {
+      create: jest.fn<PollEntity, [typeof PollEntity, Partial<PollEntity>]>(),
+      save: jest.fn(),
+      delete: jest.fn(),
+      findOne: jest.fn(),
+      find: jest.fn(),
+      update: jest.fn(),
+      remove: jest.fn(),
+    };
   });
 
   afterEach(async () => {
@@ -217,6 +226,14 @@ describe('PollService', () => {
       page: 1,
       pageCount: 0,
     });
+  });
+
+  it('should get poll', async () => {
+    jest.spyOn(pollRepository, 'findOne').mockResolvedValue(poll);
+
+    const result = await pollService.findPoll(pollId);
+
+    expect(result).toEqual(poll);
   });
 
   it('should create new poll, create initial statistics and return created poll', async () => {

@@ -12,9 +12,12 @@ import { UserEntity } from '@modules/user/user.entity';
 
 const mockUsers = [new UserEntity(), new UserEntity()];
 
-const mockUser = new UserEntity();
-mockUser.id = 1;
-mockUser.email = 'vital@mail.ru';
+const mockUser = {
+  id: 1,
+  name: 'Vital',
+  email: 'vital@mail.ru',
+  createdAt: new Date(),
+} as UserEntity;
 
 const userId = 1;
 
@@ -76,7 +79,17 @@ describe('UserService', () => {
 
     const result = await userService.findById(userId);
 
-    expect(jest.spyOn(userRepository, 'findOne')).toHaveBeenCalledWith({ where: { id: userId } });
+    expect(jest.spyOn(userRepository, 'findOne')).toHaveBeenCalledWith({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        password: true,
+        email: true,
+        refreshToken: true,
+      },
+    });
     expect(result).toEqual(mockUser);
   });
 
@@ -85,7 +98,16 @@ describe('UserService', () => {
 
     const result = await userService.findByEmail(mockUser.email);
 
-    expect(jest.spyOn(userRepository, 'findOne')).toHaveBeenCalledWith({ where: { email: mockUser.email } });
+    expect(jest.spyOn(userRepository, 'findOne')).toHaveBeenCalledWith({
+      where: { email: mockUser.email },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        password: true,
+        email: true,
+      },
+    });
     expect(result).toEqual(mockUser);
   });
 

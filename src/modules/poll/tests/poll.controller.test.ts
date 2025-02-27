@@ -101,6 +101,7 @@ describe('PollController', () => {
           useValue: {
             findAllPolls: jest.fn(),
             findOwnPolls: jest.fn(),
+            findPoll: jest.fn(),
             createPoll: jest.fn(),
             saveAnswers: jest.fn(),
             closePoll: jest.fn(),
@@ -178,6 +179,16 @@ describe('PollController', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual(result);
     expect(findOwnPollsMock).toHaveBeenCalledWith({ page, limit, user: decodedUser });
+  });
+
+  it('should get poll', async () => {
+    const findPollMock = jest.spyOn(pollService, 'findPoll').mockResolvedValue(poll);
+
+    const response = await request(app.getHttpServer()).get(`/polls/${pollId}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(poll);
+    expect(findPollMock).toHaveBeenCalledWith(pollId);
   });
 
   it('should get poll statistics', async () => {

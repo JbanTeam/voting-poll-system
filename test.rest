@@ -1,8 +1,8 @@
 @hostname = localhost
 @port = 5000
 @host = {{hostname}}:{{port}}/api
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTg5NDc4NywiZXhwIjoxNzM5ODk4Mzg3fQ.apvbPxjm0fMROJcQRr-ogC_bou3vgBpcEolj9q8QhEY
-@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTczOTUyODcxMywiZXhwIjoxNzQwMTMzNTEzfQ.lFQN8qp3IUrFNQ7QyACoaXazn6VbY2OfDPxn3adJ8Ac
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0MDU5MzU0NSwiZXhwIjoxNzQwNTk3MTQ1fQ.3wdvu18UNaLL6Rd-hT2WLbm5Elp1ftNDWK8ICnYO64Q
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0MDU5MzU0NSwiZXhwIjoxNzQxMTk4MzQ1fQ.bG0HiPaJG3iGWfAlEcjTwX7GLnpaV9GxoPHP3zjnyW8
 
 ### USERS ************************************************
 ### USERS ************************************************
@@ -53,6 +53,11 @@ Authorization: Bearer {{accessToken}}
 
 ### Get own polls
 GET http://{{host}}/polls/own?page=1&limit=20
+content-type: application/json
+Authorization: Bearer {{accessToken}}
+
+### Get poll
+GET http://{{host}}/polls/1
 content-type: application/json
 Authorization: Bearer {{accessToken}}
 

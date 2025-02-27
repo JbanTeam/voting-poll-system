@@ -146,6 +146,29 @@ describe('PollController (e2e)', () => {
     });
   });
 
+  describe('/polls/:pollId (GET)', () => {
+    it('should get poll', async () => {
+      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+
+      expect(response.body).toHaveProperty('accessToken');
+      expect(response.body).toHaveProperty('refreshToken');
+
+      const pollResponse = await request(app.getHttpServer())
+        .post('/polls')
+        .set('Authorization', `Bearer ${response.body.accessToken}`)
+        .send(pollDto);
+
+      const pollId = Number(pollResponse.body.id);
+
+      const poll = await request(app.getHttpServer())
+        .get(`/polls/${pollId}`)
+        .set('Authorization', `Bearer ${response.body.accessToken}`)
+        .expect(200);
+
+      expect(poll.body.title).toEqual(pollDto.title);
+    });
+  });
+
   describe('/polls/:pollId/statistics (GET)', () => {
     it('should get poll statistics', async () => {
       const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
