@@ -1,10 +1,12 @@
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiExtraModels,
   ApiNotFoundResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 
@@ -24,6 +26,7 @@ import {
   closePollApiResponse,
   closePollBadRequestApiResponse,
   closePollNotFoundApiResponse,
+  createUnauthorizedApiResponse,
   deletePollNotFoundApiResponse,
   getPollsApiResponse,
   getPollStatisticsApiResponse,
@@ -36,6 +39,7 @@ import {
 
 @ApiExtraModels(QuestionEntity, AnswerEntity, PollStatisticsEntity, UserAnswerEntity)
 @ApiTags('Polls')
+@ApiBearerAuth()
 @Controller('polls')
 export class PollController {
   constructor(
@@ -45,6 +49,7 @@ export class PollController {
 
   @ApiOperation({ summary: 'Get all polls' })
   @ApiResponse({ ...getPollsApiResponse, description: 'Get all polls' })
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls'))
   @Get()
   async getAllPolls(
     @Query('page', ParseIntPipe) page: number,
@@ -55,6 +60,7 @@ export class PollController {
 
   @ApiOperation({ summary: 'Get own polls' })
   @ApiResponse({ ...getPollsApiResponse, description: 'Get own polls' })
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/own'))
   @Get('own')
   async getOwnPolls(
     @Query('page', ParseIntPipe) page: number,
@@ -66,6 +72,7 @@ export class PollController {
 
   @ApiOperation({ summary: 'Get poll' })
   @ApiResponse({ type: PollEntity, status: 200, description: 'Get poll' })
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/:pollId'))
   @Get(':pollId')
   async getPoll(@Param('pollId', ParseIntPipe) pollId: number): Promise<PollEntity | null> {
     return this.pollService.findPoll(pollId);
@@ -73,6 +80,7 @@ export class PollController {
 
   @ApiOperation({ summary: 'Get poll statistics' })
   @ApiResponse(getPollStatisticsApiResponse)
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/:pollId/statistics'))
   @Get(':pollId/statistics')
   async getPollStatistics(@Param('pollId', ParseIntPipe) pollId: number): Promise<PollStatistics> {
     return this.pollStatisticsService.getPollStatistics({ pollId });
@@ -80,6 +88,7 @@ export class PollController {
 
   @ApiOperation({ summary: 'Create new poll' })
   @ApiResponse({ type: PollEntity, status: 201 })
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls'))
   @Post()
   async createPoll(@Body() pollDto: PollDto, @CurrentUser() user: DecodedUser): Promise<PollEntity> {
     return this.pollService.createPoll({ pollDto, user });
@@ -89,6 +98,7 @@ export class PollController {
   @ApiResponse({ ...getPollStatisticsApiResponse, status: 201 })
   @ApiNotFoundResponse(saveAnswersNotFoundApiResponse)
   @ApiBadRequestResponse(saveAnswersBadRequestApiResponse)
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/:pollId/save-answers'))
   @Post(':pollId/save-answers')
   async saveAnswers(
     @Body() userAnswersDto: UserAnswerDto,
@@ -102,6 +112,7 @@ export class PollController {
   @ApiResponse(closePollApiResponse)
   @ApiNotFoundResponse(closePollNotFoundApiResponse)
   @ApiBadRequestResponse(closePollBadRequestApiResponse)
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/:pollId/close'))
   @Patch(':pollId/close')
   async closePoll(
     @Param('pollId', ParseIntPipe) pollId: number,
@@ -118,6 +129,7 @@ export class PollController {
   @ApiResponse(updatePollApiResponse)
   @ApiNotFoundResponse(updatePollNotFoundApiResponse)
   @ApiBadRequestResponse(updatePollBadRequestApiResponse)
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/:pollId/update'))
   @Patch(':pollId/update')
   async updatePoll(
     @Body() pollUpdateDto: PollUpdateDto,
@@ -130,6 +142,7 @@ export class PollController {
   @ApiOperation({ summary: 'Delete poll' })
   @ApiResponse({ example: { message: 'Poll deleted successfully.' }, status: 200 })
   @ApiNotFoundResponse(deletePollNotFoundApiResponse)
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/:pollId'))
   @Delete(':pollId')
   async deletePoll(
     @Param('pollId', ParseIntPipe) pollId: number,

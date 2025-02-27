@@ -22,6 +22,7 @@ async function start() {
     .setDescription('**Vote or Die**')
     .setVersion('1.0')
     .addServer(`http://localhost:${PORT}/`, 'Local environment')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, documentFactory);

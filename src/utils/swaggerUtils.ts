@@ -291,3 +291,24 @@ export const saveAnswersBadRequestApiResponse = {
     path: '/api/polls/1/save-answers',
   },
 };
+
+export const unauthorizedApiResponse = {
+  status: 401,
+  description: 'Unauthorized',
+  example: {
+    error: 'Unauthorized.',
+    statusCode: 401,
+    timestamp: '2025-02-26T14:10:51.567Z',
+    path: '/api/auth/logout',
+  },
+};
+
+export function createUnauthorizedApiResponse(path: string) {
+  return {
+    ...unauthorizedApiResponse,
+    example: {
+      ...unauthorizedApiResponse.example,
+      path,
+    },
+  };
+}

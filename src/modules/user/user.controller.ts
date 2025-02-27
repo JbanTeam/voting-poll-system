@@ -1,9 +1,10 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { Public } from '@src/utils/decorators/public.decorator';
+import { createUnauthorizedApiResponse } from '@src/utils/swaggerUtils';
 
 @ApiTags('Users')
 @Controller('users')
@@ -19,9 +20,12 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Get user by id' })
+  @ApiBearerAuth()
   @ApiResponse({ status: 200, type: UserEntity })
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/users/:id'))
   @Get(':id')
   async getUser(@Param('id', ParseIntPipe) id: number): Promise<UserEntity | null> {
-    return await this.usersService.findById(id);
+    const noHiddenFields = true;
+    return await this.usersService.findById(id, noHiddenFields);
   }
 }

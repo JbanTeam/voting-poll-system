@@ -1,4 +1,11 @@
-import { ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Controller, Post, Body, HttpCode, Patch } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
@@ -8,6 +15,7 @@ import { Public } from '@src/utils/decorators/public.decorator';
 import { CurrentUser } from '@src/utils/decorators/current-user.decorator';
 import { DecodedUser } from '@src/types/types';
 import {
+  createUnauthorizedApiResponse,
   loginApiResponse,
   loginBadRequestApiResponse,
   logoutApiResponse,
@@ -45,6 +53,8 @@ export class AuthController {
   @ApiOperation({ summary: 'User log out' })
   @ApiResponse(logoutApiResponse)
   @ApiBadRequestResponse(logoutBadRequestApiResponse)
+  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/auth/logout'))
+  @ApiBearerAuth()
   @HttpCode(200)
   @Patch('logout')
   async logout(@CurrentUser() user: DecodedUser): Promise<{ message: string }> {

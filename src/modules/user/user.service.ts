@@ -50,16 +50,16 @@ export class UserService {
     });
   }
 
-  async findById(id: number): Promise<UserEntity | null> {
+  async findById(id: number, noHiddenFields: boolean = false): Promise<UserEntity | null> {
     return this.userRepository.findOne({
       where: { id },
       select: {
         id: true,
         name: true,
         createdAt: true,
-        password: true,
+        password: !noHiddenFields,
         email: true,
-        refreshToken: true,
+        refreshToken: !noHiddenFields,
       },
     });
   }
