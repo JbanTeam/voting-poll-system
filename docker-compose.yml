@@ -2,6 +2,7 @@ services:
   app:
     build:
       context: .
+      dockerfile: Dockerfile
       target: production
     container_name: voting-app
     environment:
@@ -11,6 +12,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - voting_db_network
 
   db:
     image: postgres:15-alpine
@@ -29,6 +32,12 @@ services:
       - voting_pg_data:/var/lib/postgresql/data
     ports:
       - ${DB_PORT}:5432
+    networks:
+      - voting_db_network
+
+networks:
+  voting_db_network:
+    driver: bridge
 
 volumes:
   voting_pg_data:

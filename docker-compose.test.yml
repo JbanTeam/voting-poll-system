@@ -25,3 +25,4 @@ volumes:
   voting_pg_TEST_data:
 networks:
   voting_TEST_db_network:
+    driver: bridge
