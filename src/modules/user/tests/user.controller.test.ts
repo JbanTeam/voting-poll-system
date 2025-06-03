@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import { Request } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ExecutionContext } from '@nestjs/common';
+import { INestApplication, ExecutionContext, HttpStatus } from '@nestjs/common';
 
 import { UserService } from '@modules/user/user.service';
 import { UserController } from '@modules/user/user.controller';
@@ -55,7 +55,7 @@ describe('UserController', () => {
 
     const response = await request(app.getHttpServer()).get('/users');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(mockUsers);
   });
 
@@ -64,7 +64,7 @@ describe('UserController', () => {
 
     const response = await request(app.getHttpServer()).get(`/users/${userId}`);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(mockUser);
   });
 });

@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ExecutionContext } from '@nestjs/common';
+import { INestApplication, ExecutionContext, HttpStatus } from '@nestjs/common';
 
 import { AuthService } from '@modules/auth/auth.service';
 import { AuthController } from '@modules/auth/auth.controller';
@@ -92,7 +92,7 @@ describe('AuthController', () => {
 
     const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto);
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(HttpStatus.CREATED);
     expect(response.body).toEqual(result);
   });
 
@@ -103,7 +103,7 @@ describe('AuthController', () => {
 
     const response = await request(app.getHttpServer()).post('/auth/login').send(loginDto);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(result);
   });
 
@@ -117,7 +117,7 @@ describe('AuthController', () => {
       .patch('/auth/logout')
       .set('Authorization', `Bearer ${mockToken}`);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(result);
   });
 
@@ -129,7 +129,7 @@ describe('AuthController', () => {
 
     const response = await request(app.getHttpServer()).post('/auth/refresh-token').send({ refreshToken: mockToken });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(result);
   });
 });

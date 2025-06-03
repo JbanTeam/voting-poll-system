@@ -1,17 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { UserEntity } from '@modules/user/user.entity';
-import { QuestionEntity } from '@modules/question/question.entity';
 import { AnswerEntity } from '@modules/answer/answer.entity';
 import { PollEntity } from '@modules/poll/poll.entity';
+import { BaseEntity } from '@common/entities/base.entity';
+import { QuestionEntity } from '@modules/question/question.entity';
 
 @Entity('user_answer')
-export class UserAnswerEntity {
-  @ApiProperty({ example: 1 })
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class UserAnswerEntity extends BaseEntity {
   @ApiProperty({ type: () => UserEntity })
   @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
