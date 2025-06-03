@@ -30,4 +30,9 @@ type PollStatistics = {
   [questionId: number]: QuestionStats;
 };
 
-export { DecodedUser, PollsByPage, PollStatistics };
+type TokensReturnType = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export { DecodedUser, PollsByPage, PollStatistics, TokensReturnType };

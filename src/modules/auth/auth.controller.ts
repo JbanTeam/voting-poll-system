@@ -13,7 +13,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Public } from '@src/utils/decorators/public.decorator';
 import { CurrentUser } from '@src/utils/decorators/current-user.decorator';
-import { DecodedUser } from '@src/types/types';
+import { DecodedUser, TokensReturnType } from '@src/types/types';
 import {
   createUnauthorizedApiResponse,
   loginApiResponse,
@@ -36,7 +36,7 @@ export class AuthController {
   @ApiBadRequestResponse(registerBadRequestApiResponse)
   @Public()
   @Post('register')
-  async register(@Body() registerDto: RegisterDto): Promise<{ accessToken: string; refreshToken: string }> {
+  async register(@Body() registerDto: RegisterDto): Promise<TokensReturnType> {
     return this.authService.register(registerDto);
   }
 
@@ -46,7 +46,7 @@ export class AuthController {
   @HttpCode(200)
   @Public()
   @Post('login')
-  async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string; refreshToken: string }> {
+  async login(@Body() loginDto: LoginDto): Promise<TokensReturnType> {
     return this.authService.login(loginDto);
   }
 

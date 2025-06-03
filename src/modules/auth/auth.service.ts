@@ -5,7 +5,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { HashService } from './hash/hash.service';
 import { UserService } from '@modules/user/user.service';
-import { DecodedUser } from '@src/types/types';
+import { DecodedUser, TokensReturnType } from '@src/types/types';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +15,7 @@ export class AuthService {
     private hashService: HashService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<{ accessToken: string; refreshToken: string }> {
+  async register(registerDto: RegisterDto): Promise<TokensReturnType> {
     const existingUser = await this.userService.findByEmail(registerDto.email);
 
     if (existingUser) {
@@ -32,12 +32,15 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async login(loginDto: LoginDto): Promise<{ accessToken: string; refreshToken: string }> {
+  async login(loginDto: LoginDto): Promise<TokensReturnType> {
     const user = await this.userService.findByEmail(loginDto.email);
+
     if (!user) {
       throw new BadRequestException('Invalid credentials');
     }
+
     const isPasswordValid = await this.hashService.compare(loginDto.password, user.password);
+
     if (!isPasswordValid) {
       throw new BadRequestException('Invalid credentials');
     }
@@ -45,6 +48,7 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.generateTokens(user.id);
 
     await this.userService.updateRefreshToken({ userId: user.id, refreshToken });
+
     return { accessToken, refreshToken };
   }
 
@@ -53,6 +57,7 @@ export class AuthService {
     if (!userFromDb || !userFromDb.refreshToken) {
       throw new BadRequestException('You are not logged in');
     }
+
     const decodedUser: DecodedUser = await this.verifyRefreshToken(userFromDb.refreshToken);
 
     if (!decodedUser.userId) {
@@ -82,15 +87,17 @@ export class AuthService {
     const { userId }: DecodedUser = await this.jwtService.verifyAsync(refreshToken, {
       secret: process.env.JWT_REFRESH_SECRET || 'secret',
     });
+
     return { userId };
   }
 
-  async generateTokens(userId: number): Promise<{ accessToken: string; refreshToken: string }> {
+  async generateTokens(userId: number): Promise<TokensReturnType> {
     const accessToken = await this.jwtService.signAsync({ userId });
     const refreshToken = await this.jwtService.signAsync(
       { userId },
       { secret: process.env.JWT_REFRESH_SECRET || 'secret', expiresIn: '7 days' },
     );
+
     return { accessToken, refreshToken };
   }
 }
