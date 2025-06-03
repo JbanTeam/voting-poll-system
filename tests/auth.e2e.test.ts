@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
@@ -61,7 +61,10 @@ describe('AuthController (e2e)', () => {
 
   describe('/auth/register (POST)', () => {
     it('should register a new user', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -76,7 +79,7 @@ describe('AuthController (e2e)', () => {
     it('should login a user', async () => {
       await request(app.getHttpServer()).post('/auth/register').send(registerDto);
 
-      const response = await request(app.getHttpServer()).post('/auth/login').send(loginDto).expect(200);
+      const response = await request(app.getHttpServer()).post('/auth/login').send(loginDto).expect(HttpStatus.OK);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -94,7 +97,7 @@ describe('AuthController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .patch('/auth/logout')
         .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(response.body).toEqual({ message: 'Logout successfully' });
     });
@@ -111,7 +114,7 @@ describe('AuthController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .post('/auth/refresh-token')
         .send({ refreshToken })
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(response.body).toHaveProperty('accessToken');
     });

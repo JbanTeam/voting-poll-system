@@ -1,3 +1,4 @@
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -8,19 +9,18 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 
-import { PollService } from './poll.service';
 import { PollDto } from './dto/poll.dto';
+import { PollService } from './poll.service';
 import { PollUpdateDto } from './dto/poll-update.dto';
-import { PollEntity, PollStatus } from './poll.entity';
-import { UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
-import { QuestionEntity } from '@modules/question/question.entity';
 import { AnswerEntity } from '@modules/answer/answer.entity';
+import { QuestionEntity } from '@modules/question/question.entity';
+import { UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
 import { UserAnswerEntity } from '@modules/user-answer/user-answer.entity';
-import { PollStatisticsService } from '@modules/poll-statistics/poll-statistics.service';
-import { PollStatisticsEntity } from '@modules/poll-statistics/poll-statistics.entity';
 import { CurrentUser } from '@src/utils/decorators/current-user.decorator';
+import { PollStatisticsEntity } from '@modules/poll-statistics/poll-statistics.entity';
+import { PollStatisticsService } from '@modules/poll-statistics/poll-statistics.service';
+import { PollEntity, PollStatus } from './poll.entity';
 import { DecodedUser, PollsByPage, PollStatistics } from '@src/types/types';
 import {
   closePollApiResponse,
@@ -71,7 +71,7 @@ export class PollController {
   }
 
   @ApiOperation({ summary: 'Get poll' })
-  @ApiResponse({ type: PollEntity, status: 200, description: 'Get poll' })
+  @ApiResponse({ type: PollEntity, status: HttpStatus.OK, description: 'Get poll' })
   @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/:pollId'))
   @Get(':pollId')
   async getPoll(@Param('pollId', ParseIntPipe) pollId: number): Promise<PollEntity | null> {
@@ -87,7 +87,7 @@ export class PollController {
   }
 
   @ApiOperation({ summary: 'Create new poll' })
-  @ApiResponse({ type: PollEntity, status: 201 })
+  @ApiResponse({ type: PollEntity, status: HttpStatus.CREATED })
   @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls'))
   @Post()
   async createPoll(@Body() pollDto: PollDto, @CurrentUser() user: DecodedUser): Promise<PollEntity> {
@@ -95,7 +95,7 @@ export class PollController {
   }
 
   @ApiOperation({ summary: 'Save user answers' })
-  @ApiResponse({ ...getPollStatisticsApiResponse, status: 201 })
+  @ApiResponse({ ...getPollStatisticsApiResponse, status: HttpStatus.CREATED })
   @ApiNotFoundResponse(saveAnswersNotFoundApiResponse)
   @ApiBadRequestResponse(saveAnswersBadRequestApiResponse)
   @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/:pollId/save-answers'))
@@ -140,7 +140,7 @@ export class PollController {
   }
 
   @ApiOperation({ summary: 'Delete poll' })
-  @ApiResponse({ example: { message: 'Poll deleted successfully.' }, status: 200 })
+  @ApiResponse({ example: { message: 'Poll deleted successfully.' }, status: HttpStatus.OK })
   @ApiNotFoundResponse(deletePollNotFoundApiResponse)
   @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/polls/:pollId'))
   @Delete(':pollId')

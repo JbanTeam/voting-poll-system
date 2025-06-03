@@ -6,7 +6,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Controller, Post, Body, HttpCode, Patch } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Patch, HttpStatus } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -43,7 +43,7 @@ export class AuthController {
   @ApiOperation({ summary: 'User log in' })
   @ApiResponse(loginApiResponse)
   @ApiBadRequestResponse(loginBadRequestApiResponse)
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Public()
   @Post('login')
   async login(@Body() loginDto: LoginDto): Promise<TokensReturnType> {
@@ -55,7 +55,7 @@ export class AuthController {
   @ApiBadRequestResponse(logoutBadRequestApiResponse)
   @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/auth/logout'))
   @ApiBearerAuth()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Patch('logout')
   async logout(@CurrentUser() user: DecodedUser): Promise<{ message: string }> {
     return this.authService.logout(user.userId);
@@ -64,7 +64,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh access token' })
   @ApiResponse(refreshTokenApiResponse)
   @ApiBadRequestResponse(refreshTokenBadRequestApiResponse)
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Public()
   @Post('refresh-token')
   async refreshToken(@Body('refreshToken') refreshToken: string): Promise<{ accessToken: string }> {

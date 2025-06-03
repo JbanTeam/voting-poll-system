@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
@@ -12,7 +12,7 @@ export class UserController {
   constructor(private usersService: UserService) {}
 
   @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, type: [UserEntity] })
+  @ApiResponse({ status: HttpStatus.OK, type: [UserEntity] })
   @Public()
   @Get()
   async getUsers(): Promise<UserEntity[]> {
@@ -21,11 +21,10 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get user by id' })
   @ApiBearerAuth()
-  @ApiResponse({ status: 200, type: UserEntity })
+  @ApiResponse({ status: HttpStatus.OK, type: UserEntity })
   @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/users/:id'))
   @Get(':id')
   async getUser(@Param('id', ParseIntPipe) id: number): Promise<UserEntity | null> {
-    const noHiddenFields = true;
-    return await this.usersService.findById(id, noHiddenFields);
+    return await this.usersService.findById(id, true);
   }
 }

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
@@ -55,12 +55,15 @@ describe('UserController (e2e)', () => {
 
   describe('/users (GET)', () => {
     it('should get all users', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
 
-      const users = await request(app.getHttpServer()).get('/users').expect(200);
+      const users = await request(app.getHttpServer()).get('/users').expect(HttpStatus.OK);
       expect(users.body).toHaveLength(1);
 
       expect(users.body[0].email).toEqual(registerDto.email);
@@ -70,7 +73,10 @@ describe('UserController (e2e)', () => {
   describe('/users/:id (GET)', () => {
     it('should get user by id', async () => {
       const userId = 1;
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -78,7 +84,7 @@ describe('UserController (e2e)', () => {
       const user = await request(app.getHttpServer())
         .get(`/users/${userId}`)
         .set('Authorization', `Bearer ${response.body.accessToken}`)
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(user.body.email).toEqual(registerDto.email);
     });
