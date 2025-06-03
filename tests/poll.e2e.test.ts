@@ -13,7 +13,7 @@ import { PollDto } from '@modules/poll/dto/poll.dto';
 import { PollModule } from '@modules/poll/poll.module';
 import { PollEntity, PollStatus } from '@modules/poll/poll.entity';
 import { PollStatisticsEntity } from '@modules/poll-statistics/poll-statistics.entity';
-import { databaseConfig } from '@src/config/database.config';
+import { databaseConfig } from '@libs/config/database.config';
 import { PollUpdateDto } from '@modules/poll/dto/poll-update.dto';
 import { PollStatistics } from '@src/types/types';
 import { UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';

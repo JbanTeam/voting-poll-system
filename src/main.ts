@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { GlobalExceptionsFilter } from './errors/global-exceptions.filter';
+import { GlobalExceptionsFilter } from './libs/errors/global-exceptions.filter';
 
 const PORT = process.env.PORT || 3000;
 

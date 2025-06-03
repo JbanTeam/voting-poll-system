@@ -10,7 +10,7 @@ import { UserEntity } from '@modules/user/user.entity';
 import { AuthModule } from '@modules/auth/auth.module';
 import { RegisterDto } from '@modules/auth/dto/register.dto';
 import { LoginDto } from '@modules/auth/dto/login.dto';
-import { databaseConfig } from '@src/config/database.config';
+import { databaseConfig } from '@libs/config/database.config';
 
 const registerDto: RegisterDto = {
   name: 'Vital',
