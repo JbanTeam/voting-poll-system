@@ -1,29 +1,21 @@
-import { Controller, Get, HttpStatus, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import { Controller, Param, ParseIntPipe } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
-import { Public } from '@src/utils/decorators/public.decorator';
-import { createUnauthorizedApiResponse } from '@src/utils/swaggerUtils';
+import { GetAllUsers, GetUser } from '@common/decorators/user.controller.decorator';
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private usersService: UserService) {}
 
-  @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: HttpStatus.OK, type: [UserEntity] })
-  @Public()
-  @Get()
+  @GetAllUsers()
   async getUsers(): Promise<UserEntity[]> {
     return await this.usersService.findAll();
   }
 
-  @ApiOperation({ summary: 'Get user by id' })
-  @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.OK, type: UserEntity })
-  @ApiUnauthorizedResponse(createUnauthorizedApiResponse('/api/users/:id'))
-  @Get(':id')
+  @GetUser()
   async getUser(@Param('id', ParseIntPipe) id: number): Promise<UserEntity | null> {
     return await this.usersService.findById(id, true);
   }
