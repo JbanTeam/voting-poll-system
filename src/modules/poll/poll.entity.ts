@@ -1,16 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-  JoinColumn,
-  OneToMany,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn, OneToMany } from 'typeorm';
 
 import { UserEntity } from '@modules/user/user.entity';
+import { BaseEntity } from '@common/entities/base.entity';
 import { QuestionEntity } from '@modules/question/question.entity';
 
 export enum PollStatus {
@@ -19,11 +11,7 @@ export enum PollStatus {
 }
 
 @Entity('poll')
-export class PollEntity {
-  @ApiProperty({ example: 1 })
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class PollEntity extends BaseEntity {
   @ApiProperty({ example: 'Super poll' })
   @Column()
   title: string;

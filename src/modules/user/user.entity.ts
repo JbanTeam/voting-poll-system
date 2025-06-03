@@ -1,14 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import { PollEntity } from '@modules/poll/poll.entity';
+import { BaseEntity } from '@common/entities/base.entity';
 
 @Entity('user')
-export class UserEntity {
-  @ApiProperty({ example: 1 })
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class UserEntity extends BaseEntity {
   @ApiProperty({ example: 'Vital' })
   @Column()
   name: string;

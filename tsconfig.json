@@ -20,6 +20,7 @@
     "resolveJsonModule": true,
     "paths": {
       "@modules/*": ["src/modules/*"],
+      "@common/*": ["src/common/*"],
       "@src/*": ["src/*"]
     }
   },
