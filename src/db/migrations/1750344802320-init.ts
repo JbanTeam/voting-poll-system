@@ -1,14 +1,14 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Initial1748967111656 implements MigrationInterface {
-    name = 'Initial1748967111656'
+export class Init1750344802320 implements MigrationInterface {
+    name = 'Init1750344802320'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "answer" ("id" SERIAL NOT NULL, "text" character varying NOT NULL, "question_id" integer, CONSTRAINT "PK_9232db17b63fb1e94f97e5c224f" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "question" ("id" SERIAL NOT NULL, "text" character varying NOT NULL, "poll_id" integer, CONSTRAINT "PK_21e5786aa0ea704ae185a79b2d5" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."poll_status_enum" AS ENUM('ACTIVE', 'CLOSED')`);
-        await queryRunner.query(`CREATE TABLE "poll" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "description" text, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "closedAt" TIMESTAMP, "status" "public"."poll_status_enum" NOT NULL DEFAULT 'ACTIVE', "authorId" integer, CONSTRAINT "PK_03b5cf19a7f562b231c3458527e" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "email" character varying NOT NULL, "password" character varying NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "refreshToken" character varying, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "poll" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "description" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "closed_at" TIMESTAMP, "status" "public"."poll_status_enum" NOT NULL DEFAULT 'ACTIVE', "authorId" integer, CONSTRAINT "PK_03b5cf19a7f562b231c3458527e" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "email" character varying NOT NULL, "password" character varying NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "refresh_token" character varying, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "user_answer" ("id" SERIAL NOT NULL, "user_id" integer, "poll_id" integer, "question_id" integer, "answer_id" integer, CONSTRAINT "PK_37b32f666e59572775b1b020fb5" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "poll_statistics" ("id" SERIAL NOT NULL, "count" integer NOT NULL DEFAULT '0', "poll_id" integer, "answer_id" integer, "question_id" integer, CONSTRAINT "PK_66c3380a844abc23578c4a8b3fa" PRIMARY KEY ("id"))`);
         await queryRunner.query(`ALTER TABLE "answer" ADD CONSTRAINT "FK_c3d19a89541e4f0813f2fe09194" FOREIGN KEY ("question_id") REFERENCES "question"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);

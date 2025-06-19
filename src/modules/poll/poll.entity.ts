@@ -21,15 +21,15 @@ export class PollEntity extends BaseEntity {
   description: string;
 
   @ApiProperty({ example: '2025-02-24T15:43:31.838Z' })
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
   @ApiProperty({ example: '2025-02-24T15:43:31.838Z' })
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
   @ApiProperty({ example: null, nullable: true, default: null })
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ name: 'closed_at', type: 'timestamp', nullable: true })
   closedAt: Date;
 
   @ApiProperty({ enum: Object.values(PollStatus), example: PollStatus.ACTIVE, default: PollStatus.ACTIVE })

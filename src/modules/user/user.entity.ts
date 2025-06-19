@@ -19,15 +19,15 @@ export class UserEntity extends BaseEntity {
   password: string;
 
   @ApiProperty({ example: '2025-02-24T15:43:31.838Z' })
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
   @ApiProperty({ example: '2025-02-24T15:43:31.838Z' })
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
   @ApiProperty({ example: 'eyJhbGciOiJIUzI1N', type: 'string', nullable: true })
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', name: 'refresh_token', nullable: true })
   refreshToken: string | null;
 
   @ApiProperty({
