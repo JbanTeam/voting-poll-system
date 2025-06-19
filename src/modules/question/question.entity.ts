@@ -1,15 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { PollEntity } from '@modules/poll/poll.entity';
 import { AnswerEntity } from '@modules/answer/answer.entity';
+import { BaseEntity } from '@common/entities/base.entity';
 
 @Entity('question')
-export class QuestionEntity {
-  @ApiProperty({ example: 1 })
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class QuestionEntity extends BaseEntity {
   @ApiProperty({ example: 'Question 1' })
   @Column()
   text: string;

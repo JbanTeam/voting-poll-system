@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import { Request } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ExecutionContext } from '@nestjs/common';
+import { INestApplication, ExecutionContext, HttpStatus } from '@nestjs/common';
 
 import { UserService } from '@modules/user/user.service';
 import { UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
@@ -158,7 +158,7 @@ describe('PollController', () => {
 
     const response = await request(app.getHttpServer()).get('/polls').query({ page: 1, limit: 10 });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(result);
   });
 
@@ -176,7 +176,7 @@ describe('PollController', () => {
 
     const response = await request(app.getHttpServer()).get('/polls/own').query({ page, limit });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(result);
     expect(findOwnPollsMock).toHaveBeenCalledWith({ page, limit, user: decodedUser });
   });
@@ -186,7 +186,7 @@ describe('PollController', () => {
 
     const response = await request(app.getHttpServer()).get(`/polls/${pollId}`);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(poll);
     expect(findPollMock).toHaveBeenCalledWith(pollId);
   });
@@ -198,7 +198,7 @@ describe('PollController', () => {
 
     const response = await request(app.getHttpServer()).get(`/polls/${pollId}/statistics`);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(pollStatistics);
     expect(getPollStatisticsMock).toHaveBeenCalledWith({ pollId });
   });
@@ -208,7 +208,7 @@ describe('PollController', () => {
 
     const response = await request(app.getHttpServer()).post(`/polls`).send(pollDto);
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(HttpStatus.CREATED);
     expect(response.body).toEqual(poll);
     expect(createPollMock).toHaveBeenCalledWith({ pollDto, user: decodedUser });
   });
@@ -218,7 +218,7 @@ describe('PollController', () => {
 
     const response = await request(app.getHttpServer()).post(`/polls/${pollId}/save-answers`).send(userAnswersDto);
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(HttpStatus.CREATED);
     expect(response.body).toEqual(pollStatistics);
     expect(saveAnswersMock).toHaveBeenCalledWith({ pollId, user: decodedUser, userAnswersDto });
   });
@@ -229,7 +229,7 @@ describe('PollController', () => {
 
     const response = await request(app.getHttpServer()).patch(`/polls/${pollId}/close`);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(poll);
     expect(closePollMock).toHaveBeenCalledWith({ pollId, user: decodedUser, newStatus: PollStatus.CLOSED });
   });
@@ -239,7 +239,7 @@ describe('PollController', () => {
 
     const response = await request(app.getHttpServer()).patch(`/polls/${pollId}/update`).send(pollUpdateDto);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(fullPoll);
     expect(updatePollMock).toHaveBeenCalledWith({ pollId, user: decodedUser, pollUpdateDto });
   });
@@ -250,7 +250,7 @@ describe('PollController', () => {
 
     const response = await request(app.getHttpServer()).delete(`/polls/${pollId}`);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toEqual(result);
     expect(deletePollMock).toHaveBeenCalledWith({ pollId, user: decodedUser });
   });

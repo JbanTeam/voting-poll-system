@@ -8,7 +8,7 @@ export const databaseConfig = (configService: ConfigService): TypeOrmModuleOptio
   username: configService.get<string>('DB_USER', 'postgres'),
   password: configService.get<string>('DB_PASSWORD', 'password'),
   database: configService.get<string>('DB_NAME', 'voting_db_dev'),
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
   synchronize: configService.get<string>('NODE_ENV') === 'test',
   dropSchema: configService.get<string>('NODE_ENV') === 'test',
 });

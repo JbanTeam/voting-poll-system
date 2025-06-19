@@ -1,7 +1,9 @@
+import { HttpStatus } from '@nestjs/common';
+
 // AUTH********************************************
 // AUTH********************************************
 export const registerApiResponse = {
-  status: 201,
+  status: HttpStatus.CREATED,
   description: 'User has been successfully registered',
   example: {
     accessToken:
@@ -12,18 +14,18 @@ export const registerApiResponse = {
 };
 
 export const registerBadRequestApiResponse = {
-  status: 400,
+  status: HttpStatus.BAD_REQUEST,
   description: 'User with this email already exists',
   example: {
     error: 'User with this email already exists',
-    statusCode: 400,
+    statusCode: HttpStatus.BAD_REQUEST,
     timestamp: '2025-02-26T14:10:51.567Z',
     path: '/api/auth/register',
   },
 };
 
 export const loginApiResponse = {
-  status: 200,
+  status: HttpStatus.OK,
   description: 'User has been successfully logged in',
   example: {
     accessToken:
@@ -34,18 +36,18 @@ export const loginApiResponse = {
 };
 
 export const loginBadRequestApiResponse = {
-  status: 400,
+  status: HttpStatus.BAD_REQUEST,
   description: 'Invalid credentials',
   example: {
     error: 'Invalid credentials',
-    statusCode: 400,
+    statusCode: HttpStatus.BAD_REQUEST,
     timestamp: '2025-02-26T14:10:51.567Z',
     path: '/api/auth/login',
   },
 };
 
 export const logoutApiResponse = {
-  status: 200,
+  status: HttpStatus.OK,
   description: 'User has been successfully logged out',
   example: {
     message: 'Logout successfully.',
@@ -53,14 +55,14 @@ export const logoutApiResponse = {
 };
 
 export const logoutBadRequestApiResponse = {
-  status: 400,
+  status: HttpStatus.BAD_REQUEST,
   description: 'Not logged in/Invalid refresh token',
   examples: {
     notLoggedIn: {
       summary: 'You are not logged in',
       value: {
         error: 'You are not logged in',
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/auth/logout',
       },
@@ -69,7 +71,7 @@ export const logoutBadRequestApiResponse = {
       summary: 'Invalid refresh token',
       value: {
         error: 'Invalid refresh token',
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/auth/logout',
       },
@@ -78,7 +80,7 @@ export const logoutBadRequestApiResponse = {
 };
 
 export const refreshTokenApiResponse = {
-  status: 200,
+  status: HttpStatus.OK,
   description: 'Refresh access token',
   example: {
     accessToken:
@@ -87,11 +89,11 @@ export const refreshTokenApiResponse = {
 };
 
 export const refreshTokenBadRequestApiResponse = {
-  status: 400,
+  status: HttpStatus.BAD_REQUEST,
   description: 'Invalid refresh token',
   example: {
     error: 'Invalid refresh token',
-    statusCode: 400,
+    statusCode: HttpStatus.BAD_REQUEST,
     timestamp: '2025-02-26T14:10:51.567Z',
     path: '/api/auth/refresh-token',
   },
@@ -101,7 +103,7 @@ export const refreshTokenBadRequestApiResponse = {
 // POLLS*************************************************
 
 export const getPollsApiResponse = {
-  status: 200,
+  status: HttpStatus.OK,
   example: {
     data: [{ id: 1, title: 'title', description: 'description' }],
     total: 1,
@@ -111,7 +113,7 @@ export const getPollsApiResponse = {
 };
 
 export const getPollStatisticsApiResponse = {
-  status: 200,
+  status: HttpStatus.OK,
   description: 'Get poll statistics',
   example: {
     '1': {
@@ -125,7 +127,7 @@ export const getPollStatisticsApiResponse = {
 };
 
 export const updatePollApiResponse = {
-  status: 200,
+  status: HttpStatus.OK,
   example: {
     id: 1,
     title: 'Updated poll',
@@ -140,14 +142,14 @@ export const updatePollApiResponse = {
 };
 
 export const deletePollNotFoundApiResponse = {
-  status: 404,
+  status: HttpStatus.NOT_FOUND,
   description: 'User not found/Poll not found',
   examples: {
     user: {
       summary: 'User not found',
       value: {
         error: 'User not found',
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/polls/1',
       },
@@ -156,7 +158,7 @@ export const deletePollNotFoundApiResponse = {
       summary: 'Poll not found',
       value: {
         error: 'Poll not found',
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/polls/1',
       },
@@ -165,7 +167,7 @@ export const deletePollNotFoundApiResponse = {
 };
 
 export const closePollApiResponse = {
-  status: 200,
+  status: HttpStatus.OK,
   example: {
     id: 1,
     title: 'Super poll',
@@ -180,14 +182,14 @@ export const closePollApiResponse = {
 };
 
 export const closePollBadRequestApiResponse = {
-  status: 400,
+  status: HttpStatus.BAD_REQUEST,
   description: 'New status must be CLOSED/Already in this status',
   examples: {
     status: {
       summary: 'New status must be CLOSED.',
       value: {
         error: 'New status must be CLOSED.',
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/polls/1/close',
       },
@@ -196,7 +198,7 @@ export const closePollBadRequestApiResponse = {
       summary: 'Poll is already in this status.',
       value: {
         error: 'Poll is already in this status.',
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/polls/1/update',
       },
@@ -205,14 +207,14 @@ export const closePollBadRequestApiResponse = {
 };
 
 export const closePollNotFoundApiResponse = {
-  status: 404,
+  status: HttpStatus.NOT_FOUND,
   description: 'Poll not found',
   examples: {
     poll: {
       summary: 'Poll not found',
       value: {
         error: 'Poll not found',
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/polls/1/close',
       },
@@ -221,14 +223,14 @@ export const closePollNotFoundApiResponse = {
 };
 
 export const updatePollNotFoundApiResponse = {
-  status: 404,
+  status: HttpStatus.NOT_FOUND,
   description: 'User not found/Poll not found',
   examples: {
     user: {
       summary: 'User not found',
       value: {
         error: 'User not found',
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/polls/1/update',
       },
@@ -237,7 +239,7 @@ export const updatePollNotFoundApiResponse = {
       summary: 'Poll not found',
       value: {
         error: 'Poll not found',
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/polls/1/update',
       },
@@ -246,25 +248,25 @@ export const updatePollNotFoundApiResponse = {
 };
 
 export const updatePollBadRequestApiResponse = {
-  status: 400,
+  status: HttpStatus.BAD_REQUEST,
   description: 'Someone has already answered this poll',
   example: {
     error: 'You cant update this poll. Someone has already answered this poll.',
-    statusCode: 400,
+    statusCode: HttpStatus.BAD_REQUEST,
     timestamp: '2025-02-26T14:10:51.567Z',
     path: '/api/polls/1/update',
   },
 };
 
 export const saveAnswersNotFoundApiResponse = {
-  status: 404,
+  status: HttpStatus.NOT_FOUND,
   description: 'User not found/Poll not found',
   examples: {
     user: {
       summary: 'User not found',
       value: {
         error: 'User not found',
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/polls/1/save-answers',
       },
@@ -273,7 +275,7 @@ export const saveAnswersNotFoundApiResponse = {
       summary: 'Poll not found',
       value: {
         error: 'Poll not found',
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         timestamp: '2025-02-26T14:10:51.567Z',
         path: '/api/polls/1/save-answers',
       },
@@ -282,22 +284,22 @@ export const saveAnswersNotFoundApiResponse = {
 };
 
 export const saveAnswersBadRequestApiResponse = {
-  status: 400,
+  status: HttpStatus.BAD_REQUEST,
   description: 'You have already answered this poll',
   example: {
     error: 'You have already answered this poll.',
-    statusCode: 400,
+    statusCode: HttpStatus.BAD_REQUEST,
     timestamp: '2025-02-26T14:10:51.567Z',
     path: '/api/polls/1/save-answers',
   },
 };
 
 export const unauthorizedApiResponse = {
-  status: 401,
+  status: HttpStatus.UNAUTHORIZED,
   description: 'Unauthorized',
   example: {
     error: 'Unauthorized.',
-    statusCode: 401,
+    statusCode: HttpStatus.UNAUTHORIZED,
     timestamp: '2025-02-26T14:10:51.567Z',
     path: '/api/auth/logout',
   },
