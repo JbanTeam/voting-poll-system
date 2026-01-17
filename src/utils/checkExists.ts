@@ -21,7 +21,7 @@ const validateNewStatus = (newStatus: PollStatus) => {
     throw new BadRequestException('New status must be CLOSED.');
   }
 };
-
+// TODO: вынести в отдельный тип
 const validatePollExists = async ({
   pollId,
   authorId,

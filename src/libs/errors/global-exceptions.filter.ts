@@ -1,4 +1,4 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger } from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger, HttpStatus } from '@nestjs/common';
 import { JsonWebTokenError, TokenExpiredError } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 
@@ -19,13 +19,13 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
       status = exception.getStatus();
       errorResponse = exception.getResponse();
     } else if (exception instanceof TokenExpiredError) {
-      status = 401;
+      status = HttpStatus.UNAUTHORIZED;
       errorResponse = { error: 'Token expired' };
     } else if (exception instanceof JsonWebTokenError) {
-      status = 401;
+      status = HttpStatus.UNAUTHORIZED;
       errorResponse = { error: 'Unauthorized' };
     } else {
-      status = 500;
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
       errorResponse = { error: 'Internal server error' };
     }
 

@@ -1,14 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import { PollEntity } from '@modules/poll/poll.entity';
+import { BaseEntity } from '@common/entities/base.entity';
 
 @Entity('user')
-export class UserEntity {
-  @ApiProperty({ example: 1 })
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class UserEntity extends BaseEntity {
   @ApiProperty({ example: 'Vital' })
   @Column()
   name: string;
@@ -22,15 +19,15 @@ export class UserEntity {
   password: string;
 
   @ApiProperty({ example: '2025-02-24T15:43:31.838Z' })
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
   @ApiProperty({ example: '2025-02-24T15:43:31.838Z' })
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
   @ApiProperty({ example: 'eyJhbGciOiJIUzI1N', type: 'string', nullable: true })
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', name: 'refresh_token', nullable: true })
   refreshToken: string | null;
 
   @ApiProperty({

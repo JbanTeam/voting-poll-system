@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
@@ -13,7 +13,7 @@ import { PollDto } from '@modules/poll/dto/poll.dto';
 import { PollModule } from '@modules/poll/poll.module';
 import { PollEntity, PollStatus } from '@modules/poll/poll.entity';
 import { PollStatisticsEntity } from '@modules/poll-statistics/poll-statistics.entity';
-import { databaseConfig } from '@src/config/database.config';
+import { databaseConfig } from '@libs/config/database.config';
 import { PollUpdateDto } from '@modules/poll/dto/poll-update.dto';
 import { PollStatistics } from '@src/types/types';
 import { UserAnswerDto } from '@modules/user-answer/dto/user-answer.dto';
@@ -104,7 +104,10 @@ describe('PollController (e2e)', () => {
 
   describe('/polls (GET)', () => {
     it('should get all polls', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -118,7 +121,7 @@ describe('PollController (e2e)', () => {
         .get('/polls')
         .query({ page: 1, limit: 10 })
         .set('Authorization', `Bearer ${response.body.accessToken}`)
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(polls.body.data).toHaveLength(1);
     });
@@ -126,7 +129,10 @@ describe('PollController (e2e)', () => {
 
   describe('/polls (GET)', () => {
     it('should get own polls', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -140,7 +146,7 @@ describe('PollController (e2e)', () => {
         .get('/polls/own')
         .query({ page: 1, limit: 10 })
         .set('Authorization', `Bearer ${response.body.accessToken}`)
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(polls.body.data).toHaveLength(1);
     });
@@ -148,7 +154,10 @@ describe('PollController (e2e)', () => {
 
   describe('/polls/:pollId (GET)', () => {
     it('should get poll', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -163,7 +172,7 @@ describe('PollController (e2e)', () => {
       const poll = await request(app.getHttpServer())
         .get(`/polls/${pollId}`)
         .set('Authorization', `Bearer ${response.body.accessToken}`)
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(poll.body.title).toEqual(pollDto.title);
     });
@@ -171,7 +180,10 @@ describe('PollController (e2e)', () => {
 
   describe('/polls/:pollId/statistics (GET)', () => {
     it('should get poll statistics', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -186,7 +198,7 @@ describe('PollController (e2e)', () => {
       const pollStatistics = await request(app.getHttpServer())
         .get(`/polls/${pollId}/statistics`)
         .set('Authorization', `Bearer ${response.body.accessToken}`)
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(Object.keys(pollStatistics.body)[0]).toEqual(`${pollId}`);
     });
@@ -194,7 +206,10 @@ describe('PollController (e2e)', () => {
 
   describe('/polls (POST)', () => {
     it('should create new poll', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -212,7 +227,10 @@ describe('PollController (e2e)', () => {
 
   describe('/polls/:pollId/save-answers (POST)', () => {
     it('should save users answers and return poll statistics', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -228,7 +246,7 @@ describe('PollController (e2e)', () => {
         .post(`/polls/${pollResponse.body.id}/save-answers`)
         .set('Authorization', `Bearer ${response.body.accessToken}`)
         .send(userAnswerDto)
-        .expect(201);
+        .expect(HttpStatus.CREATED);
 
       const pollStatistics = saveAnswersResponse.body as PollStatistics;
 
@@ -239,7 +257,10 @@ describe('PollController (e2e)', () => {
 
   describe('/polls/:pollId/close (PATCH)', () => {
     it('should change status of poll to CLOSED', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -252,7 +273,7 @@ describe('PollController (e2e)', () => {
       const closePollResponse = await request(app.getHttpServer())
         .patch(`/polls/${pollResponse.body.id}/close`)
         .set('Authorization', `Bearer ${response.body.accessToken}`)
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(closePollResponse.body.status).toEqual(PollStatus.CLOSED);
     });
@@ -260,7 +281,10 @@ describe('PollController (e2e)', () => {
 
   describe('/polls/:pollId/update (PATCH)', () => {
     it('should update poll', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -274,7 +298,7 @@ describe('PollController (e2e)', () => {
         .patch(`/polls/${pollResponse.body.id}/update`)
         .set('Authorization', `Bearer ${response.body.accessToken}`)
         .send(pollUpdateDto)
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(updatePollResponse.body.title).toEqual(pollUpdateDto.title);
     });
@@ -282,7 +306,10 @@ describe('PollController (e2e)', () => {
 
   describe('/polls/:pollId (DELETE)', () => {
     it('should update poll', async () => {
-      const response = await request(app.getHttpServer()).post('/auth/register').send(registerDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(registerDto)
+        .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
@@ -295,7 +322,7 @@ describe('PollController (e2e)', () => {
       const deletePollResponse = await request(app.getHttpServer())
         .delete(`/polls/${pollResponse.body.id}`)
         .set('Authorization', `Bearer ${response.body.accessToken}`)
-        .expect(200);
+        .expect(HttpStatus.OK);
 
       expect(deletePollResponse.body.message).toEqual('Poll deleted successfully.');
     });
